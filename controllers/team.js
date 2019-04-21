@@ -5,10 +5,20 @@ const async = require("async");
 module.exports = {
 
   async post(ctx) {
-    ctx.body = "POST";
+    let name = ctx.request.body.name;
+    let newTeam = new Model.team({ name: name });
+    await newTeam
+      .save()
+      .then(result => {
+        ctx.body = result;
+      })
   },
   async get(ctx) {
-    ctx.body = "GET";
+    await Model.team
+      .find({})
+      .then(result => {
+        ctx.body = result;
+      })
   },
   async put(ctx) {
     ctx.body = "PUT";

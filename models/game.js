@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const GameSchema = new Schema(
   {
-    name: String,
+    name: { type: String, unique: true, required: true },
     logo: String
   }
 );
