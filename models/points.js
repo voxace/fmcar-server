@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const PointSchema = new Schema({
+const PointsSchema = new Schema({
   type: String,
   values: [Number]
 });
