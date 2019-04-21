@@ -15,7 +15,11 @@ module.exports = {
       })
   },
   async get(ctx) {
-    ctx.body = "GET";
+    await Model.user
+      .find({})
+      .then(result => {
+        ctx.body = result;
+      })
   },
   async put(ctx) {
     ctx.body = "PUT";
