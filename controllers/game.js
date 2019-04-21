@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Admin = require("../models");
+const Model = require("../models");
 const async = require("async");
 
 module.exports = {
@@ -16,5 +16,5 @@ module.exports = {
   async delete(ctx) {
     ctx.body = "DELETE";
   },
-  
+
 };

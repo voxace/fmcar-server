@@ -6,6 +6,7 @@ const RaceSchema = new Schema(
     series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
     pointsType: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
     type: String,
+    configuration: String, 
     number: Number,
     round: Number,
     track: String

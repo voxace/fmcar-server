@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Admin = require("../models");
+const Model = require("../models");
 const async = require("async");
 const FormData = require("form-data");
 
