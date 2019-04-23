@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 // Create Scheme
 const TeamSchema = new Schema({
   name: { type: String, unique: true, required: true },
-  users: [Schema.Types.ObjectId]
+  users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 });
 
 // Create model
