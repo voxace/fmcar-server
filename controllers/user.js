@@ -8,9 +8,10 @@ module.exports = {
 
   // Add new user
   async addUser(ctx) {
-    let name = ctx.request.body.name;
-    let gamertag = ctx.request.body.gamertag;
-    let newUser = new Model.user({ name: name, gamertag: gamertag});
+    let newUser = new Model.user({ 
+      name: ctx.request.body.name, 
+      gamertag: ctx.request.body.gamertag
+    });
     await newUser
       .save()
       .then(result => {
@@ -39,9 +40,8 @@ module.exports = {
 
   // Get single user by ID
   async getUserByID(ctx) {
-    let id = ctx.params.id;
     await Model.user
-      .findOne({ _id: id })
+      .findOne({ _id: ctx.params.id })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "User not found"; }
@@ -53,9 +53,8 @@ module.exports = {
 
   // Get single user by Name
   async getUserByName(ctx) {
-    let name = ctx.params.name;
     await Model.user
-      .findOne({ name: name })
+      .findOne({ name: ctx.params.name })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "User not found"; }
@@ -67,9 +66,8 @@ module.exports = {
 
   // Get single user by Gamertag
   async getUserByGamertag(ctx) {
-    let tag = ctx.params.tag;
     await Model.user
-      .findOne({ gamertag: tag })
+      .findOne({ gamertag: ctx.params.tag })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "User not found"; }
@@ -83,13 +81,11 @@ module.exports = {
 
   // Update user by ID
   async patchUserByID(ctx) {
-    let id = ctx.params.id;
-    let user = ctx.request.body.user;
     await Model.user
-      .updateOne({ _id: id }, {
-        name: user.name,
-        gamertag: user.gamertag,
-        avatar: user.avatar
+      .updateOne({ _id: ctx.params.id }, {
+        name: ctx.request.body.user.name,
+        gamertag: ctx.request.body.user.gamertag,
+        avatar: ctx.request.body.user.avatar
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Update Successful"; }
@@ -105,9 +101,8 @@ module.exports = {
 
   // Delete user by ID
   async deleteUserByID(ctx) {
-    let id = ctx.params.id;
     await Model.user
-      .deleteOne({ _id: id })
+      .deleteOne({ _id: ctx.params.id })
       .then(result => {
         if(result.deletedCount > 0) { ctx.body = "Delete Successful"; }
         else { throw "Error deleting user"; }

@@ -8,9 +8,10 @@ module.exports = {
 
   // Add new game
   async addGame(ctx) {
-    let name = ctx.request.body.name;
-    let gamertag = ctx.request.body.gamertag;
-    let newGame = new Model.game({ name: name, gamertag: gamertag});
+    let newGame = new Model.game({ 
+      name: ctx.request.body.name, 
+      gamertag: ctx.request.body.gamertag
+    });
     await newGame
       .save()
       .then(result => {
@@ -39,9 +40,8 @@ module.exports = {
 
   // Get single game by ID
   async getGameByID(ctx) {
-    let id = ctx.params.id;
     await Model.game
-      .findOne({ _id: id })
+      .findOne({ _id: ctx.params.id })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "Game not found"; }
@@ -53,9 +53,8 @@ module.exports = {
 
   // Get single game by Name
   async getGameByName(ctx) {
-    let name = ctx.params.name;
     await Model.game
-      .findOne({ name: name })
+      .findOne({ name: ctx.params.name })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "Game not found"; }
@@ -69,11 +68,9 @@ module.exports = {
 
   // Update game name by ID
   async patchGameNameByID(ctx) {
-    let id = ctx.params.id;
-    let name = ctx.request.body.name;
     await Model.game
-      .updateOne({ _id: id }, {
-        name: name
+      .updateOne({ _id: ctx.params.id }, {
+        name: ctx.request.body.name
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Name update Successful"; }
@@ -87,11 +84,9 @@ module.exports = {
 
   // Update game logo by ID
   async patchGameLogoByID(ctx) {
-    let id = ctx.params.id;
-    let logo = ctx.request.body.logo;
     await Model.game
-      .updateOne({ _id: id }, {
-        logo: logo
+      .updateOne({ _id: ctx.params.id }, {
+        logo: ctx.request.body.logo
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Logo update Successful"; }
@@ -107,9 +102,8 @@ module.exports = {
 
   // Delete game by ID
   async deleteGameByID(ctx) {
-    let id = ctx.params.id;
     await Model.game
-      .deleteOne({ _id: id })
+      .deleteOne({ _id: ctx.params.id })
       .then(result => {
         if(result.deletedCount > 0) { ctx.body = "Delete Successful"; }
         else { throw "Error deleting game"; }

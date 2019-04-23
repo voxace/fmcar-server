@@ -8,8 +8,9 @@ module.exports = {
 
   // Add new team
   async addTeam(ctx) {
-    let name = ctx.request.body.name;
-    let newTeam = new Model.team({ name: name });
+    let newTeam = new Model.team({ 
+      name: ctx.request.body.name 
+    });
     await newTeam
       .save()
       .then(result => {
@@ -53,9 +54,8 @@ module.exports = {
 
   // Get single team by ID
   async getTeamByID(ctx) {
-    let id = ctx.params.id;
     await Model.team
-      .findOne({ _id: id })
+      .findOne({ _id: ctx.params.id })
       .populate('users')
       .exec()
       .then(result => {
@@ -69,9 +69,8 @@ module.exports = {
 
   // Get single team by Name
   async getTeamByName(ctx) {
-    let name = ctx.params.name;
     await Model.team
-      .findOne({ name: name })
+      .findOne({ name: ctx.params.name })
       .populate('users')
       .exec()
       .then(result => {
@@ -85,9 +84,8 @@ module.exports = {
 
   // Get all teams that member belongs to
   async getTeamsByMember(ctx) {
-    let id = new mongoose.Types.ObjectId(ctx.params.member);
     await Model.team
-      .find({ users: { $in: id } })
+      .find({ users: { $in: new mongoose.Types.ObjectId(ctx.params.member) } })
       .populate('users')
       .exec()
       .then(result => {
@@ -104,11 +102,9 @@ module.exports = {
 
   // Update team name by ID
   async patchTeamByID(ctx) {
-    let id = ctx.params.id;
-    let name = ctx.request.body.name;
     await Model.team
-      .updateOne({ _id: id }, {
-        name: name
+      .updateOne({ _id: ctx.params.id }, {
+        name: ctx.request.body.name
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Update successful"; }
@@ -122,11 +118,9 @@ module.exports = {
 
   // Add member to team by team ID, member ID
   async addTeamMember(ctx) {
-    let id = ctx.params.id;
-    let member = ctx.params.member;
     await Model.team
-      .updateOne({ _id: id }, {
-        $addToSet: { users: member }
+      .updateOne({ _id: ctx.params.id }, {
+        $addToSet: { users: ctx.params.member }
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Member successfully added to team"; }
@@ -140,11 +134,9 @@ module.exports = {
 
   // Remove member from team by team ID, member ID
   async removeTeamMember(ctx) {
-    let id = ctx.params.id;
-    let member = ctx.params.member;
     await Model.team
-      .updateOne({ _id: id }, {
-        $pull: { users: member }
+      .updateOne({ _id: ctx.params.id }, {
+        $pull: { users: ctx.params.member }
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Member successfully removed from team"; }
@@ -161,9 +153,8 @@ module.exports = {
 
   // Delete team by ID
   async deleteTeamByID(ctx) {
-    let id = ctx.params.id;
     await Model.team
-      .deleteOne({ _id: id })
+      .deleteOne({ _id: ctx.params.id })
       .then(result => {
         if(result.deletedCount > 0) { ctx.body = "Delete Successful"; }
         else { throw "Error deleting team"; }

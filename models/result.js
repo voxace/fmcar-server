@@ -3,11 +3,15 @@ const Schema = mongoose.Schema;
 
 const ResultSchema = new Schema(
   {
-    user_id: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    race_id: { type: Schema.Types.ObjectId, required: true, ref: 'Race' },
-    lapTime: Number,
+    user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    race: { type: Schema.Types.ObjectId, required: true, ref: 'Race' },
+    pointsType: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
     raceType: String,
-    position: Number
+    position: Number,
+    lapTime_h: Number,
+    lapTime_m: Number,
+    lapTime_s: Number,
+    lapTime_ms: Number
   }
 );
 
