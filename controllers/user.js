@@ -6,7 +6,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  /** Add new user */
+  /** Crate a new user */
   async addUser(ctx) {
     let newUser = new Model.user({ 
       name: ctx.request.body.name, 

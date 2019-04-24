@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const TeamSchema = new Schema({
   name: { type: String, unique: true, required: true },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  series: [{ type: Schema.Types.ObjectId, ref: 'Series' }],
   registered: { type: Date, default: Date.now }
 });
 

@@ -6,7 +6,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Add new series
+  /** Create a new series */
   async addSeries(ctx) {
     let newSeries = new Model.series({ 
       name: ctx.request.body.name, 
@@ -27,7 +27,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Get all seriess
+ /** Get all series */
   async getAllSeries(ctx) {
     await Model.series
       .find({})
@@ -42,7 +42,25 @@ module.exports = {
       });
   },
 
-  // Get single series by ID
+   /** Get all series including team details */
+   async getAllSeriesWithTeams(ctx) {
+    await Model.series
+      .find({})
+      .populate('game')
+      .populate({ path: 'teams',			
+        populate: { path: 'users', model: 'User' }
+      })
+      .exec()
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "No series found"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
+  /** Get single series by ID */
   async getSeriesByID(ctx) {
     await Model.series
       .findOne({ _id: ctx.params.id })
@@ -57,10 +75,28 @@ module.exports = {
       });
   },
 
-  // Get single series by Name
-  async getSeriesByName(ctx) {
+  /** Gets a single series including team details */
+  async getSeriesWithTeamsByID(ctx) {
     await Model.series
-      .findOne({ name: ctx.params.name })
+      .findOne({ _id: ctx.params.id })
+      .populate('game')
+      .populate({ path: 'teams',			
+        populate: { path: 'users', model: 'User' }
+      })
+      .exec()
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "No series found"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
+  /** Get all series by Name */
+  async getAllSeriesByName(ctx) {
+    await Model.series
+      .find({ name: ctx.params.name })
       .populate('game')
       .exec()
       .then(result => {
@@ -72,7 +108,25 @@ module.exports = {
       });
   },
 
-  // Get all series by Year
+  /** Get all series by Name */
+  async getAllSeriesWithTeamsByName(ctx) {
+    await Model.series
+      .find({ name: ctx.params.name })
+      .populate('game')
+        .populate({ path: 'teams',			
+          populate: { path: 'users', model: 'User' }
+        })
+      .exec()
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "Series not found"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
+  /** Get all series by Year */
   async getSeriesByYear(ctx) {
     await Model.series
       .find({ year: ctx.params.year })
@@ -87,7 +141,7 @@ module.exports = {
       });
   },
 
-  // Get all series by Game
+  /** Get all series by Game */
   async getSeriesByGame(ctx) {
     await Model.series
       .find({ game: ctx.params.game })
@@ -102,9 +156,31 @@ module.exports = {
       });
   },
 
+  /** Gets a single series by name, year and season */
+  async getSeriesByNameYearSeason(ctx) {
+    await Model.series
+      .findOne({ 
+        name: ctx.params.name,
+        year: ctx.params.year,
+        season: ctx.params.season
+      })
+      .populate('game')
+        .populate({ path: 'teams',			
+          populate: { path: 'users', model: 'User' }
+        })
+      .exec()
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "Series not found"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Update all series details by ID
+  /** Update all series details by ID */
   async patchSeriesByID(ctx) {
     await Model.series
       .findOne({ _id: ctx.params.id })
@@ -131,9 +207,109 @@ module.exports = {
       });
   },
 
+  /** Add team by to series by ID */
+  async addTeam(ctx) {    
+    let seriesResult = await Model.series
+      .updateOne({ _id: ctx.params.id }, {
+        $addToSet: { teams: ctx.params.team }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    let teamResult = await Model.team
+      .updateOne({ _id: ctx.params.team }, {
+        $addToSet: { series: ctx.params.id }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(seriesResult.nModified > 0 && teamResult.nModified > 0) { 
+        ctx.body = "Team successfully added to series";
+      } else if(seriesResult.nModified == 0) { 
+        ctx.body = "Team ID already in series team list";
+      } else if(teamResult.nModified == 0) { 
+        ctx.body = "Series ID already in team's series list";
+      } else { 
+        throw "Error updating series"; 
+      }
+  },
+
+  /** Remove team by from series by ID */
+  async removeTeam(ctx) {    
+    let seriesResult = await Model.series
+      .updateOne({ _id: ctx.params.id }, {
+        $pull: { teams: ctx.params.team }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    let teamResult = await Model.team
+      .updateOne({ _id: ctx.params.team }, {
+        $pull: { series: ctx.params.id }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(seriesResult.nModified > 0 && teamResult.nModified > 0) { 
+        ctx.body = "Team successfully removed from series";
+      } else if(seriesResult.nModified == 0) { 
+        ctx.body = "Team ID not in series team list";
+      } else if(teamResult.nModified == 0) { 
+        ctx.body = "Series ID not in team's series list";
+      } else { 
+        throw "Error updating series"; 
+      }
+  },
+
+  /** Add race by to series by ID */
+  async addRace(ctx) {    
+    let seriesResult = await Model.series
+      .updateOne({ _id: ctx.params.id }, {
+        $addToSet: { teams: ctx.params.race }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(seriesResult.nModified > 0) { 
+        ctx.body = "Race successfully added to series";
+      } else if(seriesResult.nModified == 0) { 
+        ctx.body = "Race ID already in series race list";
+      } else { 
+        throw "Error updating series"; 
+      }
+  },
+
+  /** Remove race by from series by ID */
+  async removeRace(ctx) {    
+    let seriesResult = await Model.series
+      .updateOne({ _id: ctx.params.id }, {
+        $pull: { races: ctx.params.race }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      // TODO: remove all results
+
+      // TODO: remove all races
+
+      if(seriesResult.nModified > 0) { 
+        ctx.body = "Race successfully removed from series";
+      } else if(seriesResult.nModified == 0) { 
+        ctx.body = "Race ID not in series race list";
+      } else { 
+        throw "Error updating series"; 
+      }
+  },
+
   /* ~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Delete series by ID
+  /** Delete series by ID */
   async deleteSeriesByID(ctx) {
     await Model.series
       .deleteOne({ _id: ctx.params.id })

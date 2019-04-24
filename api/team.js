@@ -5,7 +5,7 @@ const router = new Router();
 /* ~~~~~~~~~~~~~~~~~~~~ POSTS ~~~~~~~~~~~~~~~~~~~~ */
 
 /**
- * Adds a new team
+ * Create a new team
  * @param {string} name - The name of the team.
  */
 router.post("/team", controller.addTeam);

@@ -6,7 +6,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Add new team
+  /** Create a new team */
   async addTeam(ctx) {
     let newTeam = new Model.team({ 
       name: ctx.request.body.name 
@@ -24,7 +24,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Get all teams
+  /** Get all teams */
   async getAllTeams(ctx) {
     await Model.team
       .find({})
@@ -37,7 +37,7 @@ module.exports = {
       });
   },
 
-  // Get all teams with member details
+  /** Get all teams including member details */
   async getAllTeamsWithMembers(ctx) {
     await Model.team
       .find({})
@@ -52,7 +52,7 @@ module.exports = {
       });
   },
 
-  // Get single team by ID
+  /** Get single team by ID */
   async getTeamByID(ctx) {
     await Model.team
       .findOne({ _id: ctx.params.id })
@@ -67,7 +67,7 @@ module.exports = {
       });
   },
 
-  // Get single team by Name
+  /** Get single team by Name */
   async getTeamByName(ctx) {
     await Model.team
       .findOne({ name: ctx.params.name })
@@ -82,7 +82,7 @@ module.exports = {
       });
   },
 
-  // Get all teams that member belongs to
+  /** Get all teams that member belongs to */
   async getTeamsByMember(ctx) {
     await Model.team
       .find({ users: { $in: new mongoose.Types.ObjectId(ctx.params.member) } })
@@ -100,7 +100,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Update team name by ID
+  /** Update team name by ID */
   async patchTeamByID(ctx) {
     await Model.team
       .updateOne({ _id: ctx.params.id }, {
@@ -116,7 +116,7 @@ module.exports = {
       });
   },
 
-  // Add member to team by team ID, member ID
+  /** Add member to team by team ID, member ID */
   async addTeamMember(ctx) {    
     let teamResult = await Model.team
       .updateOne({ _id: ctx.params.id }, {
@@ -145,7 +145,7 @@ module.exports = {
       }
   },
 
-  // Remove member from team by team ID, member ID
+  /** Remove member from team by team ID, member ID */
   async removeTeamMember(ctx) {
     let teamResult = await Model.team
       .updateOne({ _id: ctx.params.id }, {
@@ -177,7 +177,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Delete team by ID
+  /** Delete team by ID */
   async deleteTeamByID(ctx) {
     await Model.team
       .deleteOne({ _id: ctx.params.id })

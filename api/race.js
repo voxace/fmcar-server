@@ -9,7 +9,7 @@ router.post("/race", controller.addRace);
 
 /* ~~~~~~~~~~~~~~~~~~~~ GETS ~~~~~~~~~~~~~~~~~~~~ */
 
-// Get all race
+// Get all races
 router.get("/race", controller.getAllRaces);
 
 // Get single race by ID

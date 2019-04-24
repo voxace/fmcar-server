@@ -5,7 +5,7 @@ const router = new Router();
 /* ~~~~~~~~~~~~~~~~~~~~ POSTS ~~~~~~~~~~~~~~~~~~~~ */
 
 /**
- * Adds a new user
+ * Create a new user
  * @param {string} name - The name of the user.
  * @param {string} gamertag - The gamertag of the user.
  */
