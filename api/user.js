@@ -4,31 +4,53 @@ const router = new Router();
 
 /* ~~~~~~~~~~~~~~~~~~~~ POSTS ~~~~~~~~~~~~~~~~~~~~ */
 
-// Add new user
+/**
+ * Adds a new user
+ * @param {string} name - The name of the user.
+ * @param {string} gamertag - The gamertag of the user.
+ */
 router.post("/user", controller.addUser);
 
 /* ~~~~~~~~~~~~~~~~~~~~ GETS ~~~~~~~~~~~~~~~~~~~~ */
 
-// Get all users
+/** Get all users */
 router.get("/user", controller.getAllUsers);
 
-// Get single user by ID
+/**
+ * Gets a single user
+ * @param {string} id - The ID of the user.
+ */
 router.get("/user/id/:id", controller.getUserByID);
 
-// Get single user by Name
+/**
+ * Gets a single user
+ * @param {string} name - The name of the user.
+ */
 router.get("/user/name/:name", controller.getUserByName);
 
-// Get single user by Gamertag
+/**
+ * Gets a single user
+ * @param {string} gamertag - The gamertag of the user.
+ */
 router.get("/user/gamertag/:tag", controller.getUserByGamertag);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Update user by ID
+/**
+ * Updates a single user
+ * @param {string} id - The ID of the user.
+ * @param {string} name - The name of the user.
+ * @param {string} gamertag - The gamertag of the user.
+ * @param {string} avatar - The avatar (image) of the user.
+ */
 router.patch("/user/:id", controller.patchUserByID);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Delete user by ID
+/**
+ * Deletes a single user
+ * @param {string} id - The ID of the user.
+ */
 router.delete("/user/:id", controller.deleteUserByID);
 
 module.exports = router.routes();

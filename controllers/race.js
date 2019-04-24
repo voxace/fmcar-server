@@ -50,6 +50,7 @@ module.exports = {
     await Model.race
       .findOne({ _id: ctx.params.id })
       .populate('series')
+      .populate('results')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
@@ -60,7 +61,39 @@ module.exports = {
       });
   },
 
-  // Get all races in Series
+  // Get all races grouped by Series
+  async getRacesGroupedBySeries(ctx) {
+    let data = await Model.race
+      .aggregate([
+        {
+          $lookup: {
+            from: "series",
+            localField: "series",
+            foreignField: "_id",
+            as: "series"
+          }
+        },        
+        {
+          $group: {
+            _id: "$series",
+            races: {
+              $push: {
+                _id: "$_id",
+                number: "$number",
+                round: "$round",
+                track: "$track",
+                configuration: "$configuration",
+                type: "$type"
+              }
+            }
+          }
+        }
+      ])
+      .exec();
+    ctx.body = data;    
+  },
+
+  // Get all races filtered by Series
   async getRacesBySeries(ctx) {
     await Model.race
       .find({ series: ctx.params.series })

@@ -15,14 +15,19 @@ router.get("/race", controller.getAllRaces);
 // Get single race by ID
 router.get("/race/id/:id", controller.getRaceByID);
 
-// Get single race by Series
+// Get all races grouped by Series
+router.get("/race/series", controller.getRacesGroupedBySeries);
+
+// Get all races filtered by Series
 router.get("/race/series/:series", controller.getRacesBySeries);
 
-// Get all race by Type
+// Get all races by Type
 router.get("/race/type/:type", controller.getRacesByType);
 
-// Get all race by Track
+// Get all races by Track
 router.get("/race/track/:track", controller.getRacesByTrack);
+
+
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 

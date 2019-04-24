@@ -6,7 +6,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Add new user
+  /** Add new user */
   async addUser(ctx) {
     let newUser = new Model.user({ 
       name: ctx.request.body.name, 
@@ -25,7 +25,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Get all users
+  /** Get all users */
   async getAllUsers(ctx) {
     await Model.user
       .find({})
@@ -38,7 +38,7 @@ module.exports = {
       });
   },
 
-  // Get single user by ID
+  /** Get single user by ID */
   async getUserByID(ctx) {
     await Model.user
       .findOne({ _id: ctx.params.id })
@@ -51,7 +51,7 @@ module.exports = {
       });
   },
 
-  // Get single user by Name
+  /** Get single user by Name */
   async getUserByName(ctx) {
     await Model.user
       .findOne({ name: ctx.params.name })
@@ -64,7 +64,7 @@ module.exports = {
       });
   },
 
-  // Get single user by Gamertag
+  /** Get single user by Gamertag */
   async getUserByGamertag(ctx) {
     await Model.user
       .findOne({ gamertag: ctx.params.tag })
@@ -79,7 +79,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Update user by ID
+  /** Updates a single user */
   async patchUserByID(ctx) {
     await Model.user
       .updateOne({ _id: ctx.params.id }, {
@@ -99,7 +99,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Delete user by ID
+  /** Deletes a single user */
   async deleteUserByID(ctx) {
     await Model.user
       .deleteOne({ _id: ctx.params.id })

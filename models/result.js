@@ -4,14 +4,18 @@ const Schema = mongoose.Schema;
 const ResultSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    team: { type: Schema.Types.ObjectId, required: true, ref: 'Team' },
     race: { type: Schema.Types.ObjectId, required: true, ref: 'Race' },
-    pointsType: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
+    series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
+    car: String,
     raceType: String,
     position: Number,
-    lapTime_h: Number,
-    lapTime_m: Number,
-    lapTime_s: Number,
-    lapTime_ms: Number
+    raceTime: Number,
+    fastestLap: {
+      minutes: Number,
+      seconds: Number,
+      millis: Number
+    }
   }
 );
 

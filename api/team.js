@@ -4,40 +4,67 @@ const router = new Router();
 
 /* ~~~~~~~~~~~~~~~~~~~~ POSTS ~~~~~~~~~~~~~~~~~~~~ */
 
-// Add new team (name only)
+/**
+ * Adds a new team
+ * @param {string} name - The name of the team.
+ */
 router.post("/team", controller.addTeam);
 
 /* ~~~~~~~~~~~~~~~~~~~~ GETS ~~~~~~~~~~~~~~~~~~~~ */
 
-// Get all teams
+/** Get all teams */
 router.get("/team", controller.getAllTeams);
 
-// Get all teams with member details
+/** Get all teams including member details */
 router.get("/team/members", controller.getAllTeamsWithMembers);
 
-// Get single team by ID
+/**
+ * Gets a single team
+ * @param {string} id - The ID of the team.
+ */
 router.get("/team/id/:id", controller.getTeamByID);
 
-// Get single team by Name
+/**
+ * Gets a single team
+ * @param {string} name - The name of the team.
+ */
 router.get("/team/name/:name", controller.getTeamByName);
 
-// Get all teams that member belongs to
+/**
+ * Gets all teams that a member belongs to
+ * @param {string} id - The ID of the member.
+ */
 router.get("/team/member/:member", controller.getTeamsByMember);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Update team name by ID
+/**
+ * Updates a single team
+ * @param {string} id - The ID of the team.
+ * @param {string} name - The name of the team.
+ */
 router.patch("/team/:id", controller.patchTeamByID);
 
-// Add member to team by team ID, member ID
+/**
+ * Adds a member to a team
+ * @param {string} id - The ID of the team.
+ * @param {string} member - The ID of the member.
+ */
 router.patch("/team/:id/add/:member", controller.addTeamMember);
 
-// Remove member from team by team ID, member ID
+/**
+ * Removes a member from a team
+ * @param {string} id - The ID of the team.
+ * @param {string} member - The ID of the member.
+ */
 router.patch("/team/:id/remove/:member", controller.removeTeamMember);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Delete team by ID
+/**
+ * Deletes a single team
+ * @param {string} id - The ID of the team.
+ */
 router.delete("/team/:id", controller.deleteTeamByID);
 
 module.exports = router.routes();

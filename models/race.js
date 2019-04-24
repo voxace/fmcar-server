@@ -5,11 +5,13 @@ const RaceSchema = new Schema(
   {
     series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
     pointsType: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
+    date: Date,
     type: String,
     configuration: String, 
     number: Number,
     round: Number,
-    track: String
+    track: String,
+    results: [{ type: Schema.Types.ObjectId, ref: 'Result' }]
   }
 );
 

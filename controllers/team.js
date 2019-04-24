@@ -117,35 +117,61 @@ module.exports = {
   },
 
   // Add member to team by team ID, member ID
-  async addTeamMember(ctx) {
-    await Model.team
+  async addTeamMember(ctx) {    
+    let teamResult = await Model.team
       .updateOne({ _id: ctx.params.id }, {
         $addToSet: { users: ctx.params.member }
-      })
-      .then(result => {
-        if(result.nModified > 0) { ctx.body = "Member successfully added to team"; }
-        else if(result.nModified == 0) { ctx.body = "Member already in team"; }
-        else { throw "Error updating team"; }
       })
       .catch(error => {
         throw new Error(error);
       });
+
+    let userResult = await Model.user
+      .updateOne({ _id: ctx.params.member }, {
+        $addToSet: { teams: ctx.params.id }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(teamResult.nModified > 0 && userResult.nModified > 0) { 
+        ctx.body = "Member successfully added to team";
+      } else if(teamResult.nModified == 0) { 
+        ctx.body = "Member ID already in team's list";
+      } else if(userResult.nModified == 0) { 
+        ctx.body = "Team ID already in member's list";
+      } else { 
+        throw "Error updating team"; 
+      }
   },
 
   // Remove member from team by team ID, member ID
   async removeTeamMember(ctx) {
-    await Model.team
+    let teamResult = await Model.team
       .updateOne({ _id: ctx.params.id }, {
         $pull: { users: ctx.params.member }
-      })
-      .then(result => {
-        if(result.nModified > 0) { ctx.body = "Member successfully removed from team"; }
-        else if(result.nModified == 0) { ctx.body = "Member not in team"; }
-        else { throw "Error updating team"; }
       })
       .catch(error => {
         throw new Error(error);
       });
+
+    let userResult = await Model.user
+      .updateOne({ _id: ctx.params.member }, {
+        $pull: { teams: ctx.params.id }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(teamResult.nModified > 0 && userResult.nModified > 0) { 
+        ctx.body = "Member successfully removed from team";
+      } else if(teamResult.nModified == 0) { 
+        ctx.body = "Member ID not in team's list";
+      } else if(userResult.nModified == 0) { 
+        ctx.body = "Team ID not in member's list";
+      } else { 
+        throw "Error updating team"; 
+      }
   },
 
 
