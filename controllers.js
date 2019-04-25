@@ -6,6 +6,7 @@ const race = require("./controllers/race");
 const result = require("./controllers/result");
 const series = require("./controllers/series");
 const team = require("./controllers/team");
+const track = require("./controllers/track");
 const user = require("./controllers/user");
 
 module.exports = {
@@ -17,5 +18,6 @@ module.exports = {
   result,
   series,
   team,
+  track,
   user
 };

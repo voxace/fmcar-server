@@ -6,16 +6,16 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Add new race
+  /** Create a new race */
   async addRace(ctx) {
     let newRace = new Model.race({ 
-      number: ctx.request.body.number, 
-      round: ctx.request.body.round, 
-      track: ctx.request.body.track,
-      configuration: ctx.request.body.configuration,
-      type: ctx.request.body.type,
       series: ctx.request.body.series,
-      pointsType: ctx.request.body.pointsType
+      pointsTable: ctx.request.body.pointsTable,
+      track: ctx.request.body.track,
+      round: ctx.request.body.round, 
+      number: ctx.request.body.number, 
+      type: ctx.request.body.type,
+      configuration: ctx.request.body.configuration,
     });
     await newRace
       .save()

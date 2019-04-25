@@ -4,13 +4,13 @@ const Schema = mongoose.Schema;
 const RaceSchema = new Schema(
   {
     series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
-    pointsType: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
+    pointsTable: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
+    track: { type: Schema.Types.ObjectId, required: true, ref: 'Track' },
+    round: Number,
+    number: Number,
     date: Date,
     type: String,
-    configuration: String, 
-    number: Number,
-    round: Number,
-    track: String,
+    configuration: String,
     results: [{ type: Schema.Types.ObjectId, ref: 'Result' }]
   }
 );

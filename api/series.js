@@ -22,43 +22,43 @@ router.get("/series", controller.getAllSeries);
 router.get("/series/teams", controller.getAllSeriesWithTeams);
 
 /**
- * Gets a single series
+ * Get a single series
  * @param {string} id - The ID of the series.
  */
 router.get("/series/id/:id", controller.getSeriesByID);
 
 /**
- * Gets a single series including team details
+ * Get a single series including team details
  * @param {string} id - The ID of the series.
  */
 router.get("/series/teams/:id", controller.getSeriesWithTeamsByID);
 
 /**
- * Gets all series by Name
+ * Get all series by Name
  * @param {string} name - The name of the series.
  */
 router.get("/series/name/:name", controller.getAllSeriesByName);
 
 /**
- * Gets all series by name including team details
+ * Get all series by name including team details
  * @param {string} name - The name of the series.
  */
 router.get("/series/teams/name/:name", controller.getAllSeriesWithTeamsByName);
 
 /**
- * Gets all series by year
+ * Get all series by year
  * @param {number} year - The year of the series.
  */
 router.get("/series/year/:year", controller.getSeriesByYear);
 
 /**
- * Gets all series by game
+ * Get all series by game
  * @param {string} game - The ID of the game.
  */
 router.get("/series/game/:game", controller.getSeriesByGame);
 
 /**
- * Gets a single series by name, year and season
+ * Get a single series by name, year and season
  * @param {string} name - The name of the series.
  * @param {number} year - The year of the series.
  * @param {number} season - The season of the series.
@@ -68,7 +68,7 @@ router.get("/series/:name/:year/:season", controller.getSeriesByNameYearSeason);
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
 /**
- * Adds all series details by ID
+ * Update all series details by ID
  * @param {string} id - The ID of the series.
  * @param {string} name [optional] - The name of the series.
  * @param {string} game [optional] - The id of the game.
@@ -80,32 +80,32 @@ router.get("/series/:name/:year/:season", controller.getSeriesByNameYearSeason);
 router.patch("/series/:id", controller.patchSeriesByID);
 
 /**
- * Adds a team to a series
+ * Add a team to a series
  * @param {string} id - The ID of the series.
  * @param {string} team - The ID of the team.
  */
-router.patch("/series/:id/add/:team", controller.addTeam);
+router.patch("/series/:id/add/team/:team", controller.addTeam);
 
 /**
- * Removes a team from a series
+ * Remove a team from a series
  * @param {string} id - The ID of the series.
  * @param {string} team - The ID of the team.
  */
-router.patch("/series/:id/add/:team", controller.removeTeam);
+router.patch("/series/:id/remove/team/:team", controller.removeTeam);
 
 /**
- * Adds a race to a series
+ * Add a race to a series
  * @param {string} id - The ID of the series.
  * @param {string} race - The ID of the race.
  */
-router.patch("/series/:id/add/:team", controller.addRace);
+router.patch("/series/:id/add/race/:race", controller.addRace);
 
 /**
- * Removes a race from a series
+ * Remove a race from a series
  * @param {string} id - The ID of the series.
  * @param {string} race - The ID of the race.
  */
-router.patch("/series/:id/add/:team", controller.removeRace);
+router.patch("/series/:id/remove/race/:race", controller.removeRace);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 

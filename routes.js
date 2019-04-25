@@ -10,6 +10,7 @@ const race = require("./api/race");
 const result = require("./api/result");
 const series = require("./api/series");
 const team = require("./api/team");
+const track = require("./api/track");
 const user = require("./api/user");
 
 api.use(admin);
@@ -20,6 +21,7 @@ api.use(race);
 api.use(result);
 api.use(series);
 api.use(team);
+api.use(track);
 api.use(user);
 
 router.use("/api", api.routes());

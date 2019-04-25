@@ -6,16 +6,16 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Add new game
-  async addGame(ctx) {
-    let newGame = new Model.game({ 
+  // Add new track
+  async addTrack(ctx) {
+    let newTrack = new Model.track({ 
       name: ctx.request.body.name
     });
-    await newGame
+    await newTrack
       .save()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Error saving game"; }
+        else { throw "Error saving track"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -24,39 +24,39 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Get all games
-  async getAllGames(ctx) {
-    await Model.game
+  // Get all tracks
+  async getAllTracks(ctx) {
+    await Model.track
       .find({})
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No games found"; }
+        else { throw "No tracks found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  // Get single game by ID
-  async getGameByID(ctx) {
-    await Model.game
+  // Get single track by ID
+  async getTrackByID(ctx) {
+    await Model.track
       .findOne({ _id: ctx.params.id })
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Game not found"; }
+        else { throw "Track not found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  // Get single game by Name
-  async getGameByName(ctx) {
-    await Model.game
+  // Get single track by Name
+  async getTrackByName(ctx) {
+    await Model.track
       .findOne({ name: ctx.params.name })
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Game not found"; }
+        else { throw "Track not found"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -65,32 +65,32 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Update game name by ID
-  async patchGameNameByID(ctx) {
-    await Model.game
+  // Update track name by ID
+  async patchTrackNameByID(ctx) {
+    await Model.track
       .updateOne({ _id: ctx.params.id }, {
         name: ctx.request.body.name
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Name update Successful"; }
         else if(result.nModified == 0) { ctx.body = "Nothing to change"; }
-        else { throw "Error updating game name"; }
+        else { throw "Error updating track name"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  // Update game logo by ID
-  async patchGameLogoByID(ctx) {
-    await Model.game
+  // Update track logo by ID
+  async patchTrackLogoByID(ctx) {
+    await Model.track
       .updateOne({ _id: ctx.params.id }, {
         logo: ctx.request.body.logo
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Logo update Successful"; }
         else if(result.nModified == 0) { ctx.body = "Nothing to change"; }
-        else { throw "Error updating game logo"; }
+        else { throw "Error updating track logo"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -99,13 +99,13 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Delete game by ID
-  async deleteGameByID(ctx) {
-    await Model.game
+  // Delete track by ID
+  async deleteTrackByID(ctx) {
+    await Model.track
       .deleteOne({ _id: ctx.params.id })
       .then(result => {
         if(result.deletedCount > 0) { ctx.body = "Delete Successful"; }
-        else { throw "Error deleting game"; }
+        else { throw "Error deleting track"; }
       })
       .catch(error => {
         throw new Error(error);

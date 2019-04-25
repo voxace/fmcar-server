@@ -5,6 +5,7 @@ const race = require("./models/race");
 const result = require("./models/result");
 const series = require("./models/series");
 const team = require("./models/team");
+const track = require("./models/track");
 const user = require("./models/user");
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   result,
   series,
   team,
+  track,
   user
 };

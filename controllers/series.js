@@ -165,9 +165,12 @@ module.exports = {
         season: ctx.params.season
       })
       .populate('game')
-        .populate({ path: 'teams',			
-          populate: { path: 'users', model: 'User' }
-        })
+      .populate({ path: 'teams',			
+        populate: { path: 'users', model: 'User' }
+      })
+      .populate({ path: 'races',			
+        populate: { path: 'track', model: 'Track' }
+      })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
@@ -269,7 +272,7 @@ module.exports = {
   async addRace(ctx) {    
     let seriesResult = await Model.series
       .updateOne({ _id: ctx.params.id }, {
-        $addToSet: { teams: ctx.params.race }
+        $addToSet: { races: ctx.params.race }
       })
       .catch(error => {
         throw new Error(error);
