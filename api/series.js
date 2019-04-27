@@ -58,12 +58,11 @@ router.get("/series/year/:year", controller.getSeriesByYear);
 router.get("/series/game/:game", controller.getSeriesByGame);
 
 /**
- * Get a single series by name, year and season
+ * Get a single series by name and year
  * @param {string} name - The name of the series.
  * @param {number} year - The year of the series.
- * @param {number} season - The season of the series.
  */
-router.get("/series/:name/:year/:season", controller.getSeriesByNameYearSeason);
+router.get("/series/name/:name/year/:year", controller.getSeriesByNameAndYear);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
@@ -72,7 +71,6 @@ router.get("/series/:name/:year/:season", controller.getSeriesByNameYearSeason);
  * @param {string} id - The ID of the series.
  * @param {string} name [optional] - The name of the series.
  * @param {string} game [optional] - The id of the game.
- * @param {number} season [optional] - The season of the series.
  * @param {number} year [optional] - The year of the series.
  * @param {string} banner [optional] - The banner (image) of the series.
  * @param {string} logo [optional] - The logo (image) of the series.
@@ -80,32 +78,18 @@ router.get("/series/:name/:year/:season", controller.getSeriesByNameYearSeason);
 router.patch("/series/:id", controller.patchSeriesByID);
 
 /**
- * Add a team to a series
- * @param {string} id - The ID of the series.
+ * Add a team to a series season
+ * @param {string} id - The ID of the season.
  * @param {string} team - The ID of the team.
  */
 router.patch("/series/:id/add/team/:team", controller.addTeam);
 
 /**
- * Remove a team from a series
- * @param {string} id - The ID of the series.
+ * Remove a team from a series season
+ * @param {string} id - The ID of the season.
  * @param {string} team - The ID of the team.
  */
 router.patch("/series/:id/remove/team/:team", controller.removeTeam);
-
-/**
- * Add a race to a series
- * @param {string} id - The ID of the series.
- * @param {string} race - The ID of the race.
- */
-router.patch("/series/:id/add/race/:race", controller.addRace);
-
-/**
- * Remove a race from a series
- * @param {string} id - The ID of the series.
- * @param {string} race - The ID of the race.
- */
-router.patch("/series/:id/remove/race/:race", controller.removeRace);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 

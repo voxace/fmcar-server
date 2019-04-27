@@ -10,22 +10,42 @@ module.exports = {
   async addRace(ctx) {
     let newRace = new Model.race({ 
       series: ctx.request.body.series,
+      season: ctx.request.body.season,
       pointsTable: ctx.request.body.pointsTable,
       track: ctx.request.body.track,
       round: ctx.request.body.round, 
       number: ctx.request.body.number, 
       type: ctx.request.body.type,
       configuration: ctx.request.body.configuration,
+      date: ctx.request.body.date,
     });
-    await newRace
+
+    let raceResult = await newRace
       .save()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "Error saving race"; }
-      })
       .catch(error => {
         throw new Error(error);
       });
+
+    let seasonResult = await Model.series
+      .updateOne(
+        { 
+          "_id": ctx.request.body.series, 
+          "seasons._id": ctx.request.body.season 
+        }, 
+        {
+          $addToSet: { "seasons.$.races": raceResult._id }
+        }
+      )
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(raceResult && seasonResult.nModified > 0) { 
+        console.log(raceResult);
+        ctx.body = raceResult;
+      } else { 
+        throw "Error updating series";
+      }
   },
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */

@@ -3,6 +3,7 @@ const game = require("./models/game");
 const points = require("./models/points");
 const race = require("./models/race");
 const result = require("./models/result");
+const season = require("./models/season");
 const series = require("./models/series");
 const team = require("./models/team");
 const track = require("./models/track");
@@ -14,6 +15,7 @@ module.exports = {
   points,
   race,
   result,
+  season,
   series,
   team,
   track,

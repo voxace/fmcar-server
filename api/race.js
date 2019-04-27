@@ -7,12 +7,14 @@ const router = new Router();
 /**
  * Create a new race
  * @param {string} series - The ID of the series that the race is held in.
+ * @param {string} season - The ID of the season that the race is held in.
  * @param {number} pointsTable - The ID of the points table used for calculation.
  * @param {number} track - The ID of the track the race is held at.
  * @param {string} round - The round of the race.
  * @param {string} number - The race number. E.g.
  * @param {string} type - The type of race. E.g. 'Endurance'
  * @param {string} configuration - The configuration of the track. E.g. 'Full circuit'
+ * @param {date} date - The date that the race is scheduled for
  */
 router.post("/race", controller.addRace);
 

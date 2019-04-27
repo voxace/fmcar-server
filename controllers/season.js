@@ -6,21 +6,19 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  /** Create a new series */
-  async addSeries(ctx) {
+  /** Create a new season */
+  async addSeason(ctx) {
 
-    let newSeries = new Model.series({ 
-      name: ctx.request.body.name, 
-      year: ctx.request.body.year, 
-      seasons: [{ season: 1 }],
-      game: ctx.request.body.game
+    let newSeason = new Model.season({ 
+      season: ctx.request.body.season, 
+      series: ctx.request.body.series
     });
 
-    await newSeries
+    await newSeason
       .save()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Error saving series"; }
+        else { throw "Error saving season"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -29,147 +27,125 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
- /** Get all series */
-  async getAllSeries(ctx) {
-    await Model.series
+ /** Get all seasons */
+  async getAllSeasons(ctx) {
+    await Model.season
       .find({})
-      .populate('game')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No series found"; }
+        else { throw "No seasons found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-   /** Get all series including team details */
-   async getAllSeriesWithTeams(ctx) {
-    await Model.series
+   /** Get all seasons including all details */
+   async getAllSeasonsWithDetails(ctx) {
+    await Model.season
       .find({})
-      .populate('game')
+      .populate({ path: 'races',			
+        populate: { path: 'races', model: 'Race' }
+      })
       .populate({ path: 'teams',			
         populate: { path: 'users', model: 'User' }
       })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No series found"; }
+        else { throw "No seasons found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  /** Get single series by ID */
-  async getSeriesByID(ctx) {
-    await Model.series
+  /** Get single season by ID */
+  async getSeasonByID(ctx) {
+    await Model.season
       .findOne({ _id: ctx.params.id })
-      .populate('game')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Series not found"; }
+        else { throw "Season not found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  /** Gets a single series including team details */
-  async getSeriesWithTeamsByID(ctx) {
-    await Model.series
+  /** Gets a single season including all details */
+  async getSeasonWithDetailsByID(ctx) {
+    await Model.season
       .findOne({ _id: ctx.params.id })
-      .populate('game')
+      .populate({ path: 'races',			
+        populate: { path: 'races', model: 'Race' }
+      })
       .populate({ path: 'teams',			
         populate: { path: 'users', model: 'User' }
       })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No series found"; }
+        else { throw "No season found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  /** Get all series by Name */
-  async getAllSeriesByName(ctx) {
-    await Model.series
-      .find({ name: ctx.params.name })
-      .populate('game')
+  /** Get all seasons by series */
+  async getAllSeasonsBySeries(ctx) {
+    await Model.season
+      .find({ series: ctx.params.series })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Series not found"; }
+        else { throw "Season not found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  /** Get all series by Name */
-  async getAllSeriesWithTeamsByName(ctx) {
-    await Model.series
-      .find({ name: ctx.params.name })
-      .populate('game')
-        .populate({ path: 'teams',			
-          populate: { path: 'users', model: 'User' }
-        })
+  /** Get all seasons by series including all details */
+  async getAllSeasonsWithDetailsBySeries(ctx) {
+    await Model.season
+      .find({ series: ctx.params.series })
+      .populate({ path: 'races',			
+        populate: { path: 'races', model: 'Race' }
+      })
+      .populate({ path: 'teams',			
+        populate: { path: 'users', model: 'User' }
+      })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Series not found"; }
+        else { throw "Season not found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  /** Get all series by Year */
-  async getSeriesByYear(ctx) {
-    await Model.series
-      .find({ year: ctx.params.year })
-      .populate('game')
-      .exec()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "No series found for that year"; }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  },
-
-  /** Get all series by Game */
-  async getSeriesByGame(ctx) {
-    await Model.series
-      .find({ game: ctx.params.game })
-      .populate('game')
-      .exec()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "No series found for that game"; }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  },
-
-  /** Gets a single series by name, year and season */
-  async getSeriesByNameAndYear(ctx) {
-    await Model.series
+  /** Gets a single season by series and season */
+  async getSeasonBySeriesAndSeason(ctx) {
+    await Model.season
       .findOne({ 
-        name: ctx.params.name,
-        year: ctx.params.year,
+        series: ctx.params.series,
+        season: ctx.params.season,
       })
-      .populate('game')
+      .populate({ path: 'races',			
+        populate: { path: 'races', model: 'Race' }
+      })
+      .populate({ path: 'teams',			
+        populate: { path: 'users', model: 'User' }
+      })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Series not found"; }
+        else { throw "Season not found"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -178,9 +154,9 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  /** Update all series details by ID */
-  async patchSeriesByID(ctx) {
-    await Model.series
+  /** Update all season details by ID */
+  async patchSeasonByID(ctx) {
+    await Model.season
       .findOne({ _id: ctx.params.id })
       .then(async result => {
         if(result) {          
@@ -193,10 +169,10 @@ module.exports = {
           .save()
           .then(newResult => {
             if(newResult) { ctx.body = newResult; }
-            else { throw "Error updating series"; }
+            else { throw "Error updating season"; }
           })
         } else { 
-          throw "Series not found";
+          throw "Season not found";
         }
       })
       .catch(error => {
@@ -204,9 +180,9 @@ module.exports = {
       });
   },
 
-  /** Add team by to series by ID */
+  /** Add team by to season by ID */
   async addTeam(ctx) {    
-    let seriesResult = await Model.series
+    let seasonResult = await Model.season
       .updateOne({ _id: ctx.params.id }, {
         $addToSet: { teams: ctx.params.team }
       })
@@ -216,26 +192,26 @@ module.exports = {
 
     let teamResult = await Model.team
       .updateOne({ _id: ctx.params.team }, {
-        $addToSet: { series: ctx.params.id }
+        $addToSet: { season: ctx.params.id }
       })
       .catch(error => {
         throw new Error(error);
       });
 
-      if(seriesResult.nModified > 0 && teamResult.nModified > 0) { 
-        ctx.body = "Team successfully added to series";
-      } else if(seriesResult.nModified == 0) { 
-        ctx.body = "Team ID already in series team list";
+      if(seasonResult.nModified > 0 && teamResult.nModified > 0) { 
+        ctx.body = "Team successfully added to season";
+      } else if(seasonResult.nModified == 0) { 
+        ctx.body = "Team ID already in season team list";
       } else if(teamResult.nModified == 0) { 
-        ctx.body = "Series ID already in team's series list";
+        ctx.body = "Season ID already in team's season list";
       } else { 
-        throw "Error updating series"; 
+        throw "Error updating season"; 
       }
   },
 
-  /** Remove team by from series by ID */
+  /** Remove team by from season by ID */
   async removeTeam(ctx) {    
-    let seriesResult = await Model.series
+    let seasonResult = await Model.season
       .updateOne({ _id: ctx.params.id }, {
         $pull: { teams: ctx.params.team }
       })
@@ -245,26 +221,26 @@ module.exports = {
 
     let teamResult = await Model.team
       .updateOne({ _id: ctx.params.team }, {
-        $pull: { series: ctx.params.id }
+        $pull: { season: ctx.params.id }
       })
       .catch(error => {
         throw new Error(error);
       });
 
-      if(seriesResult.nModified > 0 && teamResult.nModified > 0) { 
-        ctx.body = "Team successfully removed from series";
-      } else if(seriesResult.nModified == 0) { 
-        ctx.body = "Team ID not in series team list";
+      if(seasonResult.nModified > 0 && teamResult.nModified > 0) { 
+        ctx.body = "Team successfully removed from season";
+      } else if(seasonResult.nModified == 0) { 
+        ctx.body = "Team ID not in season team list";
       } else if(teamResult.nModified == 0) { 
-        ctx.body = "Series ID not in team's series list";
+        ctx.body = "Season ID not in team's season list";
       } else { 
-        throw "Error updating series"; 
+        throw "Error updating season"; 
       }
   },
 
-  /** Add race by to series by ID */
+  /** Add race by to season by ID */
   async addRace(ctx) {    
-    let seriesResult = await Model.series
+    let seasonResult = await Model.season
       .updateOne({ _id: ctx.params.id }, {
         $addToSet: { races: ctx.params.race }
       })
@@ -272,18 +248,18 @@ module.exports = {
         throw new Error(error);
       });
 
-      if(seriesResult.nModified > 0) { 
-        ctx.body = "Race successfully added to series";
-      } else if(seriesResult.nModified == 0) { 
-        ctx.body = "Race ID already in series race list";
+      if(seasonResult.nModified > 0) { 
+        ctx.body = "Race successfully added to season";
+      } else if(seasonResult.nModified == 0) { 
+        ctx.body = "Race ID already in season race list";
       } else { 
-        throw "Error updating series"; 
+        throw "Error updating season"; 
       }
   },
 
-  /** Remove race by from series by ID */
+  /** Remove race by from season by ID */
   async removeRace(ctx) {    
-    let seriesResult = await Model.series
+    let seasonResult = await Model.season
       .updateOne({ _id: ctx.params.id }, {
         $pull: { races: ctx.params.race }
       })
@@ -295,24 +271,24 @@ module.exports = {
 
       // TODO: remove all races
 
-      if(seriesResult.nModified > 0) { 
-        ctx.body = "Race successfully removed from series";
-      } else if(seriesResult.nModified == 0) { 
-        ctx.body = "Race ID not in series race list";
+      if(seasonResult.nModified > 0) { 
+        ctx.body = "Race successfully removed from season";
+      } else if(seasonResult.nModified == 0) { 
+        ctx.body = "Race ID not in season race list";
       } else { 
-        throw "Error updating series"; 
+        throw "Error updating season"; 
       }
   },
 
   /* ~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~ */
 
-  /** Delete series by ID */
-  async deleteSeriesByID(ctx) {
-    await Model.series
+  /** Delete season by ID */
+  async deleteSeasonByID(ctx) {
+    await Model.season
       .deleteOne({ _id: ctx.params.id })
       .then(result => {
         if(result.deletedCount > 0) { ctx.body = "Delete Successful"; }
-        else { throw "Error deleting series"; }
+        else { throw "Error deleting season"; }
       })
       .catch(error => {
         throw new Error(error);
