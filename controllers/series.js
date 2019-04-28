@@ -9,18 +9,36 @@ module.exports = {
   /** Create a new series */
   async addSeries(ctx) {
 
+    let newSeason = new Model.season({ 
+      season: 1
+    });
+
+    let newSeasonResult = await newSeason
+      .save()
+      .catch(error => {
+        throw new Error(error);
+      });
+
     let newSeries = new Model.series({ 
       name: ctx.request.body.name, 
       year: ctx.request.body.year, 
-      seasons: [{ season: 1 }],
-      game: ctx.request.body.game
+      game: ctx.request.body.game,
+      seasons: [ newSeasonResult._id ]
     });
 
-    await newSeries
+    let newSeriesResult = await newSeries
       .save()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "Error saving series"; }
+      .catch(error => {
+        throw new Error(error);
+      });
+      
+    await Model.season
+      .updateOne({ _id: newSeasonResult._id }, {
+        series: newSeriesResult._id
+      })
+      .then((result) => {
+        if(result) { ctx.body = newSeriesResult; }
+        else { throw "Error adding series"; }
       })
       .catch(error => {
         throw new Error(error);

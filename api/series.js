@@ -8,7 +8,6 @@ const router = new Router();
  * Create a new series
  * @param {string} name - The name of the series.
  * @param {number} year - The year of the series.
- * @param {number} season - The season of the series.
  * @param {string} game - The ID of the game.
  */
 router.post("/series", controller.addSeries);

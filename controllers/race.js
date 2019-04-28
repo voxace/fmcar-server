@@ -6,7 +6,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  /** Create a new race */
+  /** Creates a new race and adds it to a season */
   async addRace(ctx) {
     let newRace = new Model.race({ 
       series: ctx.request.body.series,
@@ -26,14 +26,13 @@ module.exports = {
         throw new Error(error);
       });
 
-    let seasonResult = await Model.series
+    let seasonResult = await Model.season
       .updateOne(
         { 
-          "_id": ctx.request.body.series, 
-          "seasons._id": ctx.request.body.season 
+          _id: ctx.request.body.season, 
         }, 
         {
-          $addToSet: { "seasons.$.races": raceResult._id }
+          $addToSet: { races: raceResult._id }
         }
       )
       .catch(error => {
@@ -44,7 +43,7 @@ module.exports = {
         console.log(raceResult);
         ctx.body = raceResult;
       } else { 
-        throw "Error updating series";
+        throw "Error updating season";
       }
   },
 
