@@ -5,7 +5,7 @@ const router = new Router();
 /* ~~~~~~~~~~~~~~~~~~~~ POSTS ~~~~~~~~~~~~~~~~~~~~ */
 
 /**
- * Create a new series
+ * Create a new series and its first season
  * @param {string} name - The name of the series.
  * @param {number} year - The year of the series.
  * @param {string} game - The ID of the game.

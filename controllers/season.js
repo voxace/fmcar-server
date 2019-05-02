@@ -8,21 +8,36 @@ module.exports = {
 
   /** Create a new season */
   async addSeason(ctx) {
-
     let newSeason = new Model.season({ 
-      season: ctx.request.body.season, 
-      series: ctx.request.body.series
+      series: ctx.request.body.series,
+      season: ctx.request.body.season,
     });
 
-    await newSeason
+    let seasonResult = await newSeason
       .save()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "Error saving season"; }
-      })
       .catch(error => {
         throw new Error(error);
       });
+
+    let seriesResult = await Model.series
+      .updateOne(
+        { 
+          _id: ctx.request.body.series, 
+        }, 
+        {
+          $addToSet: { seasons: seasonResult._id }
+        }
+      )
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(seasonResult && seriesResult.nModified > 0) { 
+        console.log(seasonResult);
+        ctx.body = seasonResult;
+      } else { 
+        throw "Error updating season";
+      }
   },
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */

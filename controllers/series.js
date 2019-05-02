@@ -151,6 +151,7 @@ module.exports = {
     await Model.series
       .find({ year: ctx.params.year })
       .populate('game')
+      .populate('seasons')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
@@ -184,6 +185,7 @@ module.exports = {
         year: ctx.params.year,
       })
       .populate('game')
+      .populate('seasons')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
