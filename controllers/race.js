@@ -112,7 +112,7 @@ module.exports = {
     ctx.body = data;    
   },
 
-  // Get all races filtered by Series
+  // Get all races filtered by series
   async getRacesBySeries(ctx) {
     await Model.race
       .find({ series: ctx.params.series })
@@ -121,6 +121,22 @@ module.exports = {
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "No races found for that series"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
+  // Get all races filtered by season
+  async getRacesBySeason(ctx) {
+    await Model.race
+      .find({ season: ctx.params.season })
+      .populate('series')
+      .populate('season')
+      .exec()
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "No races found for that season"; }
       })
       .catch(error => {
         throw new Error(error);

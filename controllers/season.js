@@ -40,6 +40,88 @@ module.exports = {
       }
   },
 
+  /** Copies a season */
+  async copySeason(ctx) {
+
+    // Create a new season
+    let newSeason = new Model.season({ 
+      series: ctx.request.body.series,
+      season: ctx.request.body.season,
+      races: []
+    });
+
+    // Save the season
+    let seasonResult = await newSeason
+      .save()
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    // Find all races from old season
+    const cursor = await Model.race.find({ season: ctx.request.body.oldSeason }).cursor();
+
+    // Loop through each of the old races
+    await cursor.eachAsync(async doc => {
+
+      // Dupilcate the race details
+      let newRace = new Model.race({ 
+        series: doc.series,
+        season: seasonResult._id,
+        pointsTable: doc.pointsTable,
+        track: doc.track,
+        round: doc.round, 
+        number: doc.number, 
+        type: doc.type,
+        configuration: doc.configuration,
+        date: doc.date,
+      });
+  
+      // Save duplicate races for the new season
+      let raceResult = await newRace
+        .save()
+        .catch(error => {
+          throw new Error(error);
+        });
+        
+      // Add them to the season
+      await Model.season
+      .updateOne(
+        { 
+          _id: seasonResult._id, 
+        }, 
+        {
+          $addToSet: { races: raceResult._id }
+        }
+      )
+      .catch(error => {
+        throw new Error(error);
+      });
+      
+    });
+
+    // Update the series to include the season
+    let seriesResult = await Model.series
+      .updateOne(
+        { 
+          _id: ctx.request.body.series, 
+        }, 
+        {
+          $addToSet: { seasons: seasonResult._id }
+        }
+      )
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    // Check to see if it all worked
+    if(seasonResult && seriesResult.nModified > 0) { 
+      console.log(seasonResult);
+      ctx.body = seasonResult;
+    } else { 
+      throw "Error duplicating season";
+    }
+  },
+
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
  /** Get all seasons */

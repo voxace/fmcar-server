@@ -11,6 +11,14 @@ const router = new Router();
  */
 router.post("/season", controller.addSeason);
 
+/**
+ * Copies a season
+ * @param {number} season - The number of the season.
+ * @param {number} oldSeason - The ID of the season to copy.
+ * @param {string} series - The ID of the series it belongs to.
+ */
+router.post("/season/copy", controller.copySeason);
+
 /* ~~~~~~~~~~~~~~~~~~~~ GETS ~~~~~~~~~~~~~~~~~~~~ */
 
 /** Get all seasons */

@@ -39,6 +39,12 @@ router.get("/race/series", controller.getRacesGroupedBySeries);
 router.get("/race/series/:series", controller.getRacesBySeries);
 
 /**
+ * Gets all races by season
+ * @param {string} season - The ID of the season.
+ */
+router.get("/race/season/:season", controller.getRacesBySeason);
+
+/**
  * Gets all races by type
  * @param {string} type - The ID of the series.
  */
