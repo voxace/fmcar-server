@@ -180,14 +180,16 @@ module.exports = {
     await Model.race
       .findOne({ _id: ctx.params.id })
       .then(async result => {
-        if(result) {          
+        if(result) {        
           if(ctx.request.body.series) { result.series = ctx.request.body.series }
-          if(ctx.request.body.pointType) { result.pointType = ctx.request.body.pointType }
+          if(ctx.request.body.season) { result.series = ctx.request.body.season }
+          if(ctx.request.body.pointsTable) { result.pointType = ctx.request.body.pointsTable }
+          if(ctx.request.body.track) { result.track = ctx.request.body.track }
+          if(ctx.request.body.round) { result.round = ctx.request.body.round }
+          if(ctx.request.body.number) { result.number = ctx.request.body.number }
           if(ctx.request.body.type) { result.type = ctx.request.body.type }
           if(ctx.request.body.configuration) { result.configuration = ctx.request.body.configuration }
-          if(ctx.request.body.number) { result.number = ctx.request.body.number }
-          if(ctx.request.body.round) { result.round = ctx.request.body.round }
-          if(ctx.request.body.track) { result.track = ctx.request.body.track }
+          if(ctx.request.body.date) { result.date = ctx.request.body.date }
           await result
           .save()
           .then(newResult => {
