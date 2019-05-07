@@ -341,13 +341,41 @@ module.exports = {
   async deleteSeasonByID(ctx) {
     
     // Delete all results
-
+    await Model.result
+      .deleteMany({ season: ctx.params.id })
+      .catch(error => {
+        throw new Error(error);
+      });
 
     // Delete all races
-
+    await Model.race
+      .deleteMany({ season: ctx.params.id })
+      .catch(error => {
+        throw new Error(error);
+      });
 
     // Remove from teams
+    await Model.team
+      .updateOne({ seasons: ctx.params.id }, {
+        $pull: { seasons: ctx.params.id }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
 
+    // Update the number on remaining seasons
+    const current = await Model.season.findOne({ _id: ctx.params.id });
+    const cursor = await Model.season
+      .find({ season: { $gt: current.season }, series: current.series })
+      .cursor();
+    await cursor.eachAsync(async doc => {
+      doc.season -= 1;
+      await doc
+        .save()
+        .catch(error => {
+          throw new Error(error);
+        });
+    });
 
     // Delete season itself
     await Model.season
