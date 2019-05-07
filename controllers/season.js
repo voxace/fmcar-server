@@ -176,8 +176,8 @@ module.exports = {
   async getSeasonWithDetailsByID(ctx) {
     await Model.season
       .findOne({ _id: ctx.params.id })
-      .populate({ path: 'races',			
-        populate: { path: 'races', model: 'Race' }
+      .populate({ path: 'races',		
+        populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
         populate: { path: 'users', model: 'User' }
@@ -335,52 +335,21 @@ module.exports = {
       }
   },
 
-  /** Add race by to season by ID */
-  async addRace(ctx) {    
-    let seasonResult = await Model.season
-      .updateOne({ _id: ctx.params.id }, {
-        $addToSet: { races: ctx.params.race }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-
-      if(seasonResult.nModified > 0) { 
-        ctx.body = "Race successfully added to season";
-      } else if(seasonResult.nModified == 0) { 
-        ctx.body = "Race ID already in season race list";
-      } else { 
-        throw "Error updating season"; 
-      }
-  },
-
-  /** Remove race by from season by ID */
-  async removeRace(ctx) {    
-    let seasonResult = await Model.season
-      .updateOne({ _id: ctx.params.id }, {
-        $pull: { races: ctx.params.race }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-
-      // TODO: remove all results
-
-      // TODO: remove all races
-
-      if(seasonResult.nModified > 0) { 
-        ctx.body = "Race successfully removed from season";
-      } else if(seasonResult.nModified == 0) { 
-        ctx.body = "Race ID not in season race list";
-      } else { 
-        throw "Error updating season"; 
-      }
-  },
-
   /* ~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~ */
 
   /** Delete season by ID */
   async deleteSeasonByID(ctx) {
+    
+    // Delete all results
+
+
+    // Delete all races
+
+
+    // Remove from teams
+
+
+    // Delete season itself
     await Model.season
       .deleteOne({ _id: ctx.params.id })
       .then(result => {
@@ -390,6 +359,7 @@ module.exports = {
       .catch(error => {
         throw new Error(error);
       });
+
   },
   
 };

@@ -209,6 +209,31 @@ module.exports = {
 
   // Delete race by ID
   async deleteRaceByID(ctx) {
+
+    // Get race details
+    let raceResult = await Model.race
+      .findOne({ _id: ctx.params.id })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    // Remove the race from the season
+    await Model.season
+      .updateOne({ _id: raceResult.season }, {
+        $pull: { races: ctx.params.race }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    // Remove all of the results for the race
+    await Model.result
+      .deleteMany({ race: ctx.params.race })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    // Remove the race itself
     await Model.race
       .deleteOne({ _id: ctx.params.id })
       .then(result => {
@@ -218,6 +243,7 @@ module.exports = {
       .catch(error => {
         throw new Error(error);
       });
+  
   },
   
 };

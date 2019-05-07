@@ -17,20 +17,11 @@ router.post("/series", controller.addSeries);
 /** Get all series */
 router.get("/series", controller.getAllSeries);
 
-/** Get all series including team details */
-router.get("/series/teams", controller.getAllSeriesWithTeams);
-
 /**
  * Get a single series
  * @param {string} id - The ID of the series.
  */
 router.get("/series/id/:id", controller.getSeriesByID);
-
-/**
- * Get a single series including team details
- * @param {string} id - The ID of the series.
- */
-router.get("/series/teams/:id", controller.getSeriesWithTeamsByID);
 
 /**
  * Get all series by Name
@@ -39,22 +30,16 @@ router.get("/series/teams/:id", controller.getSeriesWithTeamsByID);
 router.get("/series/name/:name", controller.getAllSeriesByName);
 
 /**
- * Get all series by name including team details
- * @param {string} name - The name of the series.
- */
-router.get("/series/teams/name/:name", controller.getAllSeriesWithTeamsByName);
-
-/**
  * Get all series by year
  * @param {number} year - The year of the series.
  */
-router.get("/series/year/:year", controller.getSeriesByYear);
+router.get("/series/year/:year", controller.getAllSeriesByYear);
 
 /**
  * Get all series by game
  * @param {string} game - The ID of the game.
  */
-router.get("/series/game/:game", controller.getSeriesByGame);
+router.get("/series/game/:game", controller.getAllSeriesByGame);
 
 /**
  * Get a single series by name and year
@@ -75,20 +60,6 @@ router.get("/series/name/:name/year/:year", controller.getSeriesByNameAndYear);
  * @param {string} logo [optional] - The logo (image) of the series.
  */
 router.patch("/series/:id", controller.patchSeriesByID);
-
-/**
- * Add a team to a series season
- * @param {string} id - The ID of the season.
- * @param {string} team - The ID of the team.
- */
-router.patch("/series/:id/add/team/:team", controller.addTeam);
-
-/**
- * Remove a team from a series season
- * @param {string} id - The ID of the season.
- * @param {string} team - The ID of the team.
- */
-router.patch("/series/:id/remove/team/:team", controller.removeTeam);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 
