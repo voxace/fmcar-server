@@ -7,6 +7,9 @@ const router = new Router();
 /**
  * Create a new team
  * @param {string} name - The name of the team.
+ * @param {string} driver_a - The id of the user that is driver A.
+ * @param {string} driver_b - The id of the user that is driver B.
+ * @param {string} season - The id of the season that the team is racing in.
  */
 router.post("/team", controller.addTeam);
 
@@ -31,10 +34,10 @@ router.get("/team/id/:id", controller.getTeamByID);
 router.get("/team/name/:name", controller.getTeamByName);
 
 /**
- * Gets all teams that a member belongs to
- * @param {string} id - The ID of the member.
+ * Gets all teams that a user belongs to
+ * @param {string} id - The ID of the user.
  */
-router.get("/team/member/:member", controller.getTeamsByMember);
+router.get("/team/user/:user", controller.getTeamsByUser);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
@@ -42,22 +45,10 @@ router.get("/team/member/:member", controller.getTeamsByMember);
  * Updates a single team
  * @param {string} id - The ID of the team.
  * @param {string} name - The name of the team.
+ * @param {string} driver_a - The id of the user that is driver A.
+ * @param {string} driver_b - The id of the user that is driver B.
  */
 router.patch("/team/:id", controller.patchTeamByID);
-
-/**
- * Adds a member to a team
- * @param {string} id - The ID of the team.
- * @param {string} member - The ID of the member.
- */
-router.patch("/team/:id/add/:member", controller.addTeamMember);
-
-/**
- * Removes a member from a team
- * @param {string} id - The ID of the team.
- * @param {string} member - The ID of the member.
- */
-router.patch("/team/:id/remove/:member", controller.removeTeamMember);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 

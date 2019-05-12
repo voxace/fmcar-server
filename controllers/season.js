@@ -142,11 +142,11 @@ module.exports = {
    async getAllSeasonsWithDetails(ctx) {
     await Model.season
       .find({})
-      .populate({ path: 'races',			
-        populate: { path: 'races', model: 'Race' }
+      .populate({ path: 'races',		
+        populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
-        populate: { path: 'users', model: 'User' }
+        populate: { path: 'driver_a driver_b', model: 'User' }
       })
       .exec()
       .then(result => {
@@ -180,7 +180,7 @@ module.exports = {
         populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
-        populate: { path: 'users', model: 'User' }
+        populate: { path: 'driver_a driver_b', model: 'User' }
       })
       .exec()
       .then(result => {
@@ -210,11 +210,11 @@ module.exports = {
   async getAllSeasonsWithDetailsBySeries(ctx) {
     await Model.season
       .find({ series: ctx.params.series })
-      .populate({ path: 'races',			
-        populate: { path: 'races', model: 'Race' }
+      .populate({ path: 'races',		
+        populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
-        populate: { path: 'users', model: 'User' }
+        populate: { path: 'driver_a driver_b', model: 'User' }
       })
       .exec()
       .then(result => {
@@ -233,11 +233,11 @@ module.exports = {
         series: ctx.params.series,
         season: ctx.params.season,
       })
-      .populate({ path: 'races',			
-        populate: { path: 'races', model: 'Race' }
+      .populate({ path: 'races',		
+        populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
-        populate: { path: 'users', model: 'User' }
+        populate: { path: 'driver_a driver_b', model: 'User' }
       })
       .exec()
       .then(result => {
@@ -289,7 +289,7 @@ module.exports = {
 
     let teamResult = await Model.team
       .updateOne({ _id: ctx.params.team }, {
-        $addToSet: { season: ctx.params.id }
+        $addToSet: { seasons: ctx.params.id }
       })
       .catch(error => {
         throw new Error(error);
