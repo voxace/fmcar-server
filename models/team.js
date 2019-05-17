@@ -4,10 +4,12 @@ const Schema = mongoose.Schema;
 // Create Scheme
 const TeamSchema = new Schema({
   name: { type: String, required: true },
+  season: { type: Schema.Types.ObjectId, ref: 'Season' },
+  registered: { type: Date, default: Date.now },
   driver_a: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   driver_b: { type: Schema.Types.ObjectId, ref: 'User' },
-  season: { type: Schema.Types.ObjectId, ref: 'Season' },
-  registered: { type: Date, default: Date.now }
+  driver_a_num: Number,
+  driver_b_num: Number
 });
 
 TeamSchema.index({name: 1, season: 1}, {unique: true});
