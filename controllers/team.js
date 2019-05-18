@@ -13,6 +13,8 @@ module.exports = {
       name: ctx.request.body.name,
       driver_a: ctx.request.body.driver_a,
       driver_b: ctx.request.body.driver_b,
+      driver_a_num: ctx.request.body.driver_a_num,
+      driver_b_num: ctx.request.body.driver_b_num,
     });
 
     if(ctx.request.body.season) {
@@ -126,6 +128,54 @@ module.exports = {
       });
   },
 
+  /** Get all teams that user belongs to */
+  async getTeamsBySeason(ctx) {
+    await Model.team
+      .find({ season: ctx.params.season })
+      .populate('driver_a')
+      .populate('driver_b')
+      .exec()
+      .then(result => {
+        if(result.length > 0) { ctx.body = result; }
+        else if(result.length == 0) { ctx.body = "No teams found in season"; }
+        else { throw "Error getting teams by user"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
+  /** Get all teams that user belongs to */
+  async getDriverNumbersBySeason(ctx) {    
+    let data = await Model.team
+      .aggregate([
+        {
+          $match: 
+          {
+            season: mongoose.Types.ObjectId(ctx.params.season)
+          }
+        },
+        {
+          $group: {
+            _id: "$season",
+            driver_a: { $addToSet: "$driver_a_num" },
+            driver_b: { $addToSet: "$driver_b_num" }
+          }
+        },
+        { 
+          $project: { 
+            numbers: { 
+              $concatArrays: [ "$driver_a", "$driver_b" ] 
+            } 
+          } 
+        }
+      ])
+      .exec();
+
+    function compareNumbers(a, b) { return a - b; }
+    ctx.body = data[0].numbers.sort(compareNumbers);
+  },
+
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
   /** Update team name and drivers by ID */
@@ -134,7 +184,9 @@ module.exports = {
       .updateOne({ _id: ctx.params.id }, {
         name: ctx.request.body.name,
         driver_a: ctx.request.body.driver_a,
-        driver_b: ctx.request.body.driver_b
+        driver_b: ctx.request.body.driver_b,
+        driver_a_num: ctx.request.body.driver_a_num,
+        driver_b_num: ctx.request.body.driver_b_num
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Update successful"; }

@@ -28,16 +28,28 @@ router.get("/team/members", controller.getAllTeamsWithMembers);
 router.get("/team/id/:id", controller.getTeamByID);
 
 /**
- * Gets a single team
+ * Gets a single team by name
  * @param {string} name - The name of the team.
  */
 router.get("/team/name/:name", controller.getTeamByName);
 
 /**
  * Gets all teams that a user belongs to
- * @param {string} id - The ID of the user.
+ * @param {string} user - The ID of the user.
  */
 router.get("/team/user/:user", controller.getTeamsByUser);
+
+/**
+ * Gets all teams that belong to a particular season
+ * @param {string} season - The ID of the season.
+ */
+router.get("/team/season/:season", controller.getTeamsBySeason);
+
+/**
+ * Gets all teams that belong to a particular season
+ * @param {string} season - The ID of the season.
+ */
+router.get("/team/numbers/:season", controller.getDriverNumbersBySeason);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
