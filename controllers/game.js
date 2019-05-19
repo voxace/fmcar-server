@@ -20,6 +20,9 @@ module.exports = {
       });
 
     if(newGameResult && ctx.request.body.logo) {
+
+      // TODO: rename image to match object ID
+
       newGameResult.logo = ctx.request.body.logo;
       await newGameResult
         .save()
@@ -79,6 +82,9 @@ module.exports = {
 
   // Update game name by ID
   async patchGameNameByID(ctx) {
+
+    // TODO: rename image to match object ID before updating
+
     await Model.game
       .updateOne({ _id: ctx.params.id }, {
         name: ctx.request.body.name,
