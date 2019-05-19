@@ -8,18 +8,30 @@ module.exports = {
 
   // Add new game
   async addGame(ctx) {
+
     let newGame = new Model.game({ 
-      name: ctx.request.body.name
+      name: ctx.request.body.name,
     });
-    await newGame
+
+    let newGameResult = await newGame
       .save()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "Error saving game"; }
-      })
       .catch(error => {
         throw new Error(error);
       });
+
+    if(newGameResult && ctx.request.body.logo) {
+      newGameResult.logo = ctx.request.body.logo;
+      await newGameResult
+        .save()
+        .then(result => {
+          ctx.body = result;
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
+    } else {
+      ctx.body = newGameResult;
+    }
   },
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
@@ -69,7 +81,8 @@ module.exports = {
   async patchGameNameByID(ctx) {
     await Model.game
       .updateOne({ _id: ctx.params.id }, {
-        name: ctx.request.body.name
+        name: ctx.request.body.name,
+        logo: ctx.request.body.logo
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Name update Successful"; }

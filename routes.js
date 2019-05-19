@@ -12,6 +12,7 @@ const season = require("./api/season");
 const series = require("./api/series");
 const team = require("./api/team");
 const track = require("./api/track");
+const upload = require("./api/upload");
 const user = require("./api/user");
 
 api.use(admin);
@@ -24,6 +25,7 @@ api.use(season);
 api.use(series);
 api.use(team);
 api.use(track);
+api.use(upload);
 api.use(user);
 
 router.use("/api", api.routes());

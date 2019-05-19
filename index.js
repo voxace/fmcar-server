@@ -13,7 +13,10 @@ app.use(cors());
 //Set up body parsing middleware
 app.use(
   bodyParser({
-    formidable: { uploadDir: "./uploads" }, //This is where the files would come
+    formidable: { 
+      uploadDir: "./uploads",
+      keepExtensions: true
+    },
     multipart: true,
     urlencoded: true
   })
