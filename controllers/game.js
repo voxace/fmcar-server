@@ -80,10 +80,11 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Update game name by ID
-  async patchGameNameByID(ctx) {
+  // Update game by ID
+  async patchGameByID(ctx) {
 
     // TODO: rename image to match object ID before updating
+    console.log(ctx.request.body.logo);
 
     await Model.game
       .updateOne({ _id: ctx.params.id }, {
@@ -94,22 +95,6 @@ module.exports = {
         if(result.nModified > 0) { ctx.body = "Name update Successful"; }
         else if(result.nModified == 0) { ctx.body = "Nothing to change"; }
         else { throw "Error updating game name"; }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  },
-
-  // Update game logo by ID
-  async patchGameLogoByID(ctx) {
-    await Model.game
-      .updateOne({ _id: ctx.params.id }, {
-        logo: ctx.request.body.logo
-      })
-      .then(result => {
-        if(result.nModified > 0) { ctx.body = "Logo update Successful"; }
-        else if(result.nModified == 0) { ctx.body = "Nothing to change"; }
-        else { throw "Error updating game logo"; }
       })
       .catch(error => {
         throw new Error(error);

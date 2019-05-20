@@ -20,11 +20,8 @@ router.get("/game/name/:name", controller.getGameByName);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Update game name by ID
-router.patch("/game/name/:id", controller.patchGameNameByID);
-
-// Update game logo by ID
-router.patch("/game/logo/:id", controller.patchGameLogoByID);
+// Update game by ID
+router.patch("/game/:id", controller.patchGameByID);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 
