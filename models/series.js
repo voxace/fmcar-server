@@ -6,6 +6,10 @@ const SeriesSchema = new Schema({
   game: { type: Schema.Types.ObjectId, ref: 'Game' },
   seasons: [{ type: Schema.Types.ObjectId, ref: 'Season' }],
   year: { type: Number, required: true },
+  carChoices: [{
+    car: String,
+    limit: Number,
+  }],
   banner: String,
   logo: String
 });
