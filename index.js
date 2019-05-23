@@ -32,6 +32,7 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 mongoose.set("useCreateIndex", true);
+mongoose.set('useFindAndModify', false);
 mongoose.connection
   .once("open", function() {
     console.log("Mongodb Connection made");

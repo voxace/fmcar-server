@@ -9,6 +9,8 @@ module.exports = {
   /** Create a new series */
   async addSeries(ctx) {
 
+    let model = ctx.request.body.model;
+    
     let newSeason = new Model.season({ 
       season: 1
     });
@@ -19,12 +21,9 @@ module.exports = {
         throw new Error(error);
       });
 
-    let newSeries = new Model.series({ 
-      name: ctx.request.body.name, 
-      year: ctx.request.body.year, 
-      game: ctx.request.body.game,
-      seasons: [ newSeasonResult._id ]
-    });
+    model.seasons = [ newSeasonResult._id ];
+
+    let newSeries = new Model.series(model);
 
     let newSeriesResult = await newSeries
       .save()
@@ -150,23 +149,10 @@ module.exports = {
   /** Update all series details by ID */
   async patchSeriesByID(ctx) {
     await Model.series
-      .findOne({ _id: ctx.params.id })
-      .then(async result => {
-        if(result) {          
-          if(ctx.request.body.name) { result.name = ctx.request.body.name }
-          if(ctx.request.body.banner) { result.banner = ctx.request.body.banner }
-          if(ctx.request.body.logo) { result.logo = ctx.request.body.logo }
-          if(ctx.request.body.year) { result.year = ctx.request.body.year }
-          if(ctx.request.body.game) { result.game = ctx.request.body.game }
-          await result
-          .save()
-          .then(newResult => {
-            if(newResult) { ctx.body = newResult; }
-            else { throw "Error updating series"; }
-          })
-        } else { 
-          throw "Series not found";
-        }
+      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "Error updating series"; }
       })
       .catch(error => {
         throw new Error(error);

@@ -7,6 +7,7 @@ const SeriesSchema = new Schema({
   seasons: [{ type: Schema.Types.ObjectId, ref: 'Season' }],
   year: { type: Number, required: true },
   carChoices: [{
+    _id: false,
     car: String,
     limit: Number,
   }],
