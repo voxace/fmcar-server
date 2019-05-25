@@ -9,17 +9,9 @@ module.exports = {
   /** Create a new team */
   async addTeam(ctx) {
     
-    let newTeam = new Model.team({ 
-      name: ctx.request.body.name,
-      driver_a: ctx.request.body.driver_a,
-      driver_b: ctx.request.body.driver_b,
-      driver_a_num: ctx.request.body.driver_a_num,
-      driver_b_num: ctx.request.body.driver_b_num,
-    });
-
-    if(ctx.request.body.season) {
-      newTeam.season = ctx.request.body.season;
-    }
+    let model = ctx.request.body.model;
+    console.log(model);
+    let newTeam = new Model.team(model);
 
     let teamResult = await newTeam
       .save()
@@ -27,11 +19,11 @@ module.exports = {
         throw new Error(error);
       });
 
-    if(ctx.request.body.season) {
+    if(model.season) {
       await Model.season
         .updateOne(
           { 
-            _id: ctx.request.body.season, 
+            _id: model.season, 
           }, 
           {
             $addToSet: { teams: teamResult._id }
@@ -128,7 +120,7 @@ module.exports = {
       });
   },
 
-  /** Get all teams that user belongs to */
+  /** Get all teams that are in a particular season */
   async getTeamsBySeason(ctx) {
     await Model.team
       .find({ season: ctx.params.season })
@@ -145,7 +137,24 @@ module.exports = {
       });
   },
 
-  /** Get all teams that user belongs to */
+  /** Get all teams that are in a particular series */
+  async getTeamsBySeries(ctx) {
+    await Model.team
+      .find({ series: ctx.params.series })
+      .populate('driver_a')
+      .populate('driver_b')
+      .exec()
+      .then(result => {
+        if(result.length > 0) { ctx.body = result; }
+        else if(result.length == 0) { ctx.body = "No teams found in series"; }
+        else { throw "Error getting teams by user"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
+  /** Get all driver numbers for season */
   async getDriverNumbersBySeason(ctx) {    
     let data = await Model.team
       .aggregate([
@@ -176,21 +185,35 @@ module.exports = {
     ctx.body = data[0].numbers.sort(compareNumbers);
   },
 
+    /** Get all driver numbers for season */
+    async getCarsUsedBySeason(ctx) {    
+      let data = await Model.team
+        .aggregate([
+          {
+            $match: 
+            {
+              season: mongoose.Types.ObjectId(ctx.params.season)
+            }
+          },
+          {
+            $group: {
+              _id: "$car",
+              count:{ $sum:1 }
+            }
+          }
+        ])
+        .exec();
+      ctx.body = data;
+    },
+
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  /** Update team name and drivers by ID */
+  /** Update team by ID */
   async patchTeamByID(ctx) {
     await Model.team
-      .updateOne({ _id: ctx.params.id }, {
-        name: ctx.request.body.name,
-        driver_a: ctx.request.body.driver_a,
-        driver_b: ctx.request.body.driver_b,
-        driver_a_num: ctx.request.body.driver_a_num,
-        driver_b_num: ctx.request.body.driver_b_num
-      })
+      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
       .then(result => {
-        if(result.nModified > 0) { ctx.body = "Update successful"; }
-        else if(result.nModified == 0) { ctx.body = "Nothing to change"; }
+        if(result) { ctx.body = result; }
         else { throw "Error updating team"; }
       })
       .catch(error => {

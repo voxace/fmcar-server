@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 const TeamSchema = new Schema({
   name: { type: String, required: true },
   season: { type: Schema.Types.ObjectId, ref: 'Season' },
+  series: { type: Schema.Types.ObjectId, ref: 'Series' },
+  car: { type: String },
   registered: { type: Date, default: Date.now },
   driver_a: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   driver_b: { type: Schema.Types.ObjectId, ref: 'User' },
