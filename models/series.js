@@ -6,10 +6,16 @@ const SeriesSchema = new Schema({
   game: { type: Schema.Types.ObjectId, ref: 'Game' },
   seasons: [{ type: Schema.Types.ObjectId, ref: 'Season' }],
   year: { type: Number, required: true },
+  pointsTables: [{ type: Schema.Types.ObjectId, required: true, ref: 'Points' }],
   carChoices: [{
     _id: false,
     car: String,
     limit: Number,
+  }],
+  raceTypes: [{
+    _id: false,
+    type: String,
+    description: String,
   }],
   banner: String,
   logo: String
