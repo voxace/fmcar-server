@@ -203,7 +203,11 @@ module.exports = {
           }
         ])
         .exec();
-      ctx.body = data;
+      if (data.length == 1 && data[0]._id == null) {
+        ctx.body = [];
+      } else {
+        ctx.body = data;
+      }
     },
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
