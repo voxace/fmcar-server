@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Model = require("../models");
 const async = require("async");
+const fs = require("fs");
+const path = require("path");
 
 module.exports = {
 
@@ -21,9 +23,12 @@ module.exports = {
 
     if(newGameResult && ctx.request.body.logo) {
 
-      // TODO: rename image to match object ID
+      const oldPath = './uploads/' + ctx.request.body.logo;
+      const extension = path.extname(oldPath);
+      const newPath = './public/' + newGameResult.id + extension;
+      await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
 
-      newGameResult.logo = ctx.request.body.logo;
+      newGameResult.logo = newGameResult.id + extension;
       await newGameResult
         .save()
         .then(result => {
@@ -83,13 +88,15 @@ module.exports = {
   // Update game by ID
   async patchGameByID(ctx) {
 
-    // TODO: rename image to match object ID before updating
-    console.log(ctx.request.body.logo);
+    const oldPath = './uploads/' + ctx.request.body.logo;
+    const extension = path.extname(oldPath);
+    const newPath = './public/' + ctx.params.id + extension;
+    await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
 
     await Model.game
       .updateOne({ _id: ctx.params.id }, {
         name: ctx.request.body.name,
-        logo: ctx.request.body.logo
+        logo: ctx.params.id + extension
       })
       .then(result => {
         if(result.nModified > 0) { ctx.body = "Name update Successful"; }

@@ -10,7 +10,7 @@ async function upload(ctx) {
   async function moveFile(file) {
     const oldPath = file.path;
     const extension = path.extname(oldPath);
-    const newPath = './public/' + uuidv4() + extension;
+    const newPath = './uploads/' + uuidv4() + extension;
     await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
     ctx.body = newPath.slice(9);
   }
