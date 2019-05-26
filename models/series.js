@@ -14,7 +14,7 @@ const SeriesSchema = new Schema({
   }],
   raceTypes: [{
     _id: false,
-    type: String,
+    name: String,
     description: String,
   }],
   banner: String,
