@@ -13,7 +13,6 @@ module.exports = {
 
     let model = ctx.request.body.model;
     let newTrack = new Model.track(model);
-    console.log(model);
 
     let newTrackResult = await newTrack
       .save()
