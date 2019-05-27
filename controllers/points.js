@@ -8,11 +8,10 @@ module.exports = {
 
   // Add new point
   async addPointsTable(ctx) {
-    console.log(ctx.request.body.values);
-    let newPoint = new Model.points({ 
-      type: ctx.request.body.type, 
-      values: ctx.request.body.values
-    });
+    
+    let model = ctx.request.body.model;
+    let newPoint = new Model.points(model);
+
     await newPoint
       .save()
       .then(result => {
@@ -70,29 +69,10 @@ module.exports = {
   // Update points table name by ID
   async patchPointsTableNameByID(ctx) {
     await Model.points
-      .updateOne({ _id: ctx.params.id }, {
-        name: ctx.request.body.name
-      })
+      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
       .then(result => {
-        if(result.nModified > 0) { ctx.body = "Update Successful"; }
-        else if(result.nModified == 0) { ctx.body = "Nothing to change"; }
-        else { throw "Error updating point"; }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  },
-
-  // Add values to points table by ID
-  async patchPointsTableValuesByID(ctx) {
-    await Model.points
-      .updateOne({ _id: ctx.params.id }, {
-        "values.$[]": ctx.request.body.values
-      })
-      .then(result => {
-        if(result.nModified > 0) { ctx.body = "Values successfully updated in table"; }
-        else if(result.nModified == 0) { ctx.body = "Error updating table"; }
-        else { throw "Error updating table"; }
+        if(result) { ctx.body = result; }
+        else { throw "Error updating points table"; }
       })
       .catch(error => {
         throw new Error(error);

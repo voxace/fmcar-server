@@ -23,9 +23,6 @@ router.get("/points/type/:type", controller.getPointsTableByType);
 // Update points table name by ID
 router.patch("/points/:id", controller.patchPointsTableNameByID);
 
-// Add values to points table by ID
-router.patch("/points/:id/add", controller.patchPointsTableValuesByID);
-
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 
 // Delete points table by ID

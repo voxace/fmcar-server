@@ -8,17 +8,9 @@ module.exports = {
 
   /** Creates a new race and adds it to a season */
   async addRace(ctx) {
-    let newRace = new Model.race({ 
-      series: ctx.request.body.series,
-      season: ctx.request.body.season,
-      pointsTable: ctx.request.body.pointsTable,
-      track: ctx.request.body.track,
-      round: ctx.request.body.round, 
-      number: ctx.request.body.number, 
-      type: ctx.request.body.type,
-      configuration: ctx.request.body.configuration,
-      date: ctx.request.body.date,
-    });
+
+    let model = ctx.request.body.model;
+    let newRace = new Model.race(model);
 
     let raceResult = await newRace
       .save()
