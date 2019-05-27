@@ -12,6 +12,7 @@ const RaceSchema = new Schema(
     date: String,
     raceType: String,
     configuration: String,
+    weather: String,
     laps: Number,
     results: [{ type: Schema.Types.ObjectId, ref: 'Result' }]
   }

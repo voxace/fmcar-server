@@ -11,6 +11,7 @@ module.exports = {
 
     let model = ctx.request.body.model;
     let newRace = new Model.race(model);
+    console.log(model);
 
     let raceResult = await newRace
       .save()
@@ -21,7 +22,7 @@ module.exports = {
     let seasonResult = await Model.season
       .updateOne(
         { 
-          _id: ctx.request.body.season, 
+          _id: model.season, 
         }, 
         {
           $addToSet: { races: raceResult._id }
