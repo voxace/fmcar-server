@@ -29,7 +29,7 @@ module.exports = {
       await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
       newTrackResult.image = newTrackResult._id + extension;
 
-      await newGameResult
+      await newTrackResult
         .save()
         .then(result => {
           newTrackResult = result;

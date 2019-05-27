@@ -11,9 +11,8 @@ module.exports = {
   // Add new game
   async addGame(ctx) {
 
-    let newGame = new Model.game({ 
-      name: ctx.request.body.name,
-    });
+    let model = ctx.request.body.model;
+    let newGame = new Model.game(model);
 
     let newGameResult = await newGame
       .save()
@@ -21,9 +20,9 @@ module.exports = {
         throw new Error(error);
       });
 
-    if(newGameResult && ctx.request.body.logo) {
+    if(newGameResult && ctx.request.body.upload) {
 
-      const oldPath = './uploads/' + ctx.request.body.logo;
+      const oldPath = './uploads/' + ctx.request.body.upload;
       const extension = path.extname(oldPath);
       const newPath = './public/' + newGameResult._id + extension;
       await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
@@ -89,7 +88,6 @@ module.exports = {
   async patchGameByID(ctx) {
 
     let model = ctx.request.body.model;
-    console.log(model);
 
     if(ctx.request.body.upload != null && ctx.request.body.upload != 'delete') {
       const oldPath = './uploads/' + ctx.request.body.upload;
