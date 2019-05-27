@@ -6,7 +6,7 @@ const TrackSchema = new Schema(
     name: { type: String, unique: true, required: true },
     configurations: [{ type: String }],
     weatherOptions: [{ type: String }],
-    logo: String
+    image: String
   }
 );
 

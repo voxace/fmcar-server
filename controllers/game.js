@@ -25,21 +25,21 @@ module.exports = {
 
       const oldPath = './uploads/' + ctx.request.body.logo;
       const extension = path.extname(oldPath);
-      const newPath = './public/' + newGameResult.id + extension;
+      const newPath = './public/' + newGameResult._id + extension;
       await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+      newGameResult.logo = newGameResult._id + extension;
 
-      newGameResult.logo = newGameResult.id + extension;
       await newGameResult
         .save()
         .then(result => {
-          ctx.body = result;
+          newGameResult = result;
         })
         .catch(error => {
           throw new Error(error);
         });
-    } else {
-      ctx.body = newGameResult;
     }
+
+    ctx.body = newGameResult;
   },
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
@@ -88,20 +88,28 @@ module.exports = {
   // Update game by ID
   async patchGameByID(ctx) {
 
-    const oldPath = './uploads/' + ctx.request.body.logo;
-    const extension = path.extname(oldPath);
-    const newPath = './public/' + ctx.params.id + extension;
-    await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+    let model = ctx.request.body.model;
+    console.log(model);
+
+    if(ctx.request.body.upload != null && ctx.request.body.upload != 'delete') {
+      const oldPath = './uploads/' + ctx.request.body.upload;
+      const extension = path.extname(oldPath);
+      const newPath = './public/' + ctx.params.id + extension;
+      await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+      model.logo = ctx.params.id + extension;
+    }
+
+    if(ctx.request.body.upload != null && ctx.request.body.upload == 'delete') {
+      const image = './public/' + model.logo;
+      await fs.unlink(image, function(err) { if(err) { console.log('Error: ' + err) } });
+      model.logo = null;
+    }
 
     await Model.game
-      .updateOne({ _id: ctx.params.id }, {
-        name: ctx.request.body.name,
-        logo: ctx.params.id + extension
-      })
+      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
       .then(result => {
-        if(result.nModified > 0) { ctx.body = "Name update Successful"; }
-        else if(result.nModified == 0) { ctx.body = "Nothing to change"; }
-        else { throw "Error updating game name"; }
+        if(result) { ctx.body = result; }
+        else { throw "Error updating game"; }
       })
       .catch(error => {
         throw new Error(error);

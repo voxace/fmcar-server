@@ -20,11 +20,8 @@ router.get("/track/name/:name", controller.getTrackByName);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Update track name by ID
-router.patch("/track/name/:id", controller.patchTrackNameByID);
-
-// Update track logo by ID
-router.patch("/track/logo/:id", controller.patchTrackLogoByID);
+// Update track by ID
+router.patch("/track/:id", controller.patchTrackByID);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 
