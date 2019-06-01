@@ -6,6 +6,7 @@ const logger = require("koa-logger");
 const bodyParser = require("koa-body");
 const mongoose = require("mongoose");
 const serve = require("koa-static");
+const jwt = require('koa-jwt');
 
 const app = new Koa();
 app.use(cors());
@@ -54,6 +55,22 @@ app.use(async (ctx, next) => {
     ctx.app.emit("error", err, ctx);
   }
 });
+
+// Custom 401 handling for koa-jwt errors
+app.use(function(ctx, next){
+  return next().catch((err) => {
+    if (401 == err.status) {
+      ctx.status = 401;
+      ctx.body = 'Protected resource, use Authorization header to get access\n';
+    } else {
+      throw err;
+    }
+  });
+});
+
+//app
+//  .use(jwt({ secret: config.jwt.key })
+//  .unless({ path: [/^\/api\/auth\/*/] } || { path: [/^\/api\/public\/*/] }));
 
 app.use(routes.routes());
 app.use(routes.allowedMethods());
