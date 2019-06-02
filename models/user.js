@@ -10,7 +10,9 @@ const UserSchema = new Schema({
   registered: { type: Date, default: Date.now },
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   salt: String,
-  admin: { type: Boolean, default: false }
+  admin: { type: Boolean, default: false },
+  active: { type: Boolean, default: false },
+  token: String
 });
 
 const User = mongoose.model("User", UserSchema);
