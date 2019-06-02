@@ -27,7 +27,7 @@ async function sendEmail(to, token) {
 
   const msg = {
     to: to,
-    from: 'no-reply@fmcar.com',
+    from: 'verify@fmcar.com',
     subject: 'Verify Your Email',
     text: `Click on this link to verify your email ${hostUrl}/verification?token=${token}&email=${to}`,
     html: `<h3>FMCAR - Email Verification</h3>
