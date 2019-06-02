@@ -29,9 +29,9 @@ async function sendEmail(to, token) {
     to: to,
     from: 'verify@fmcar.com',
     subject: 'Verify Your Email',
-    text: `Click on this link to verify your email ${hostUrl}/verification?token=${token}&email=${to}`,
+    text: `Click on this link to verify your email ${hostUrl}/verifiy/${token}`,
     html: `<h3>FMCAR - Email Verification</h3>
-      <p><a href="${hostUrl}/${token}">Click on this link to verify your email.</a></p>
+      <p><a href="${hostUrl}/verify/${token}">Click on this link to verify your email.</a></p>
       <p>Or paste the following URL into your browser: <em>${hostUrl}/verify/${token}</em></p>`,
   };
   sendGrid.send(msg);
