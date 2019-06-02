@@ -106,7 +106,7 @@ module.exports = {
         $set: { active: true } 
       })
       .then((result) => {
-        if(result) { ctx.body = "Email successfully verified"; }
+        if(result && result.nModified > 0) { ctx.body = "Email successfully verified"; }
         else { throw "Error verifiying email"; }
       })
       .catch(error => {
