@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const GameSchema = new Schema(
   {
     name: { type: String, unique: true, required: true },
+    tracks: [{ type: Schema.Types.ObjectId, ref: 'Track' }],
     logo: String
   }
 );

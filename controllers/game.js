@@ -47,6 +47,8 @@ module.exports = {
   async getAllGames(ctx) {
     await Model.game
       .find({})
+      .sort('name')
+      .populate('tracks')
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "No games found"; }

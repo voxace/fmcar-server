@@ -48,6 +48,7 @@ module.exports = {
   async getAllTracks(ctx) {
     await Model.track
       .find({})
+      .sort('name')
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "No tracks found"; }
