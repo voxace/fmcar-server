@@ -75,7 +75,7 @@ module.exports = {
   async login(ctx) {
 
     const model = ctx.request.body.model;    
-    const userRecord = await Model.user.findOne({ email: model.email, active: true });
+    const userRecord = await Model.user.findOne({ email: model.email.toLowerCase(), active: true });
     
     if (!userRecord) {
       throw new Error('User not found')

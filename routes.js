@@ -2,7 +2,6 @@ const Router = require("koa-router");
 const router = new Router();
 const api = new Router();
 
-const admin = require("./api/admin");
 const auth = require("./api/auth");
 const game = require("./api/game");
 const points = require("./api/points");
@@ -15,7 +14,6 @@ const track = require("./api/track");
 const upload = require("./api/upload");
 const user = require("./api/user");
 
-api.use(admin);
 api.use(auth);
 api.use(game);
 api.use(points);

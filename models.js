@@ -1,4 +1,3 @@
-const admin = require("./models/admin");
 const game = require("./models/game");
 const points = require("./models/points");
 const race = require("./models/race");
@@ -10,7 +9,6 @@ const track = require("./models/track");
 const user = require("./models/user");
 
 module.exports = {
-  admin,
   game,
   points,
   race,

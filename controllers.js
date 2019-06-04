@@ -1,4 +1,3 @@
-const admin = require("./controllers/admin");
 const auth = require("./controllers/auth");
 const game = require("./controllers/game");
 const points = require("./controllers/points");
@@ -11,7 +10,6 @@ const track = require("./controllers/track");
 const user = require("./controllers/user");
 
 module.exports = {
-  admin,
   auth,
   game,
   points,
