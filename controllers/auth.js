@@ -52,7 +52,7 @@ module.exports = {
       .create({
         name: model.name,
         password: passwordHashed,
-        email: model.email,
+        email: model.email.toLowerCase(),
         gamertag: model.gamertag,
         salt: salt.toString('hex'),
         token: token.toString('hex')

@@ -4,28 +4,44 @@ const router = new Router();
 
 /* ~~~~~~~~~~~~~~~~~~~~ POSTS ~~~~~~~~~~~~~~~~~~~~ */
 
-// Add new points table
+/**
+ * Create a new points table
+ * @param {object} model - The model of the points table to be created
+ */
 router.post("/points", controller.addPointsTable);
 
 /* ~~~~~~~~~~~~~~~~~~~~ GETS ~~~~~~~~~~~~~~~~~~~~ */
 
-// Get all points tables
+/** Get all points tables */
 router.get("/points", controller.getAllPointsTables);
 
-// Get single points table by ID
+/**
+ * Gets a single points table by ID
+ * @param {string} id - The ID of the points table
+ */
 router.get("/points/id/:id", controller.getPointsTableByID);
 
-// Get single points table by Type
+/**
+ * Gets a single points table by type
+ * @param {string} type - The type of points table
+ */
 router.get("/points/type/:type", controller.getPointsTableByType);
 
 /* ~~~~~~~~~~~~~~~~~~~~ PATCHES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Update points table name by ID
-router.patch("/points/:id", controller.patchPointsTableNameByID);
+/**
+ * Updates a points table by ID
+ * @param {string} id - The ID of the points table
+ * @param {object} model - The model of the points table to be updated
+ */
+router.patch("/points/:id", controller.patchPointsTableByID);
 
 /* ~~~~~~~~~~~~~~~~~~~~ DELETES ~~~~~~~~~~~~~~~~~~~~ */
 
-// Delete points table by ID
+/**
+ * Deletes a single race by ID
+ * @param {string} id - The ID of the points table
+ */
 router.delete("/points/:id", controller.deletePointsTableByID);
 
 module.exports = router.routes();

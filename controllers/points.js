@@ -6,7 +6,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Add new point
+  // Add new points table
   async addPointsTable(ctx) {
     
     let model = ctx.request.body.model;
@@ -25,7 +25,7 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Get all points
+  // Get all points tables
   async getAllPointsTables(ctx) {
     await Model.points
       .find({})
@@ -38,7 +38,7 @@ module.exports = {
       });
   },
 
-  // Get single point by ID
+  // Get single points table by ID
   async getPointsTableByID(ctx) {
     await Model.points
       .findOne({ _id: ctx.params.id })
@@ -51,7 +51,7 @@ module.exports = {
       });
   },
 
-  // Get single point by Name
+  // Get single points table by type
   async getPointsTableByType(ctx) {
     await Model.points
       .findOne({ type: ctx.params.type })
@@ -66,8 +66,8 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Update points table name by ID
-  async patchPointsTableNameByID(ctx) {
+  // Update points table by ID
+  async patchPointsTableByID(ctx) {
     await Model.points
       .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
       .then(result => {
