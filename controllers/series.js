@@ -65,7 +65,9 @@ module.exports = {
   async getSeriesByID(ctx) {
     await Model.series
       .findOne({ _id: ctx.params.id })
-      .populate('game')
+      .populate({ path: 'game',		
+        populate: { path: 'tracks', model: 'Track'}
+      })
       .populate('seasons')
       .exec()
       .then(result => {
