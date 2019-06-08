@@ -10,3 +10,7 @@ Install depenencies
 
 ## Run Project
 > node index
+
+## Dev
+> quasar dev
+> nodemon index
