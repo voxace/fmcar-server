@@ -19,24 +19,20 @@ module.exports = {
         throw new Error(error);
       });
 
-    let seriesResult = await Model.series
-      .findOneAndUpdate(
+    let seasonResult = await Model.season
+      .updateOne(
         { 
-          "_id": model.series, "seasons._id": model.season 
-        },
-        { 
-            $addToSet: {
-                "seasons.$.rounds": roundResult._id
-            }
-        },
+          _id: model.season, 
+        }, 
+        {
+          $addToSet: { rounds: roundResult._id }
+        }
       )
       .catch(error => {
         throw new Error(error);
       });
 
-    console.log(seriesResult);
-
-      if(roundResult && seriesResult) { 
+      if(roundResult && seasonResult.nModified > 0) { 
         console.log(roundResult);
         ctx.body = roundResult;
       } else { 

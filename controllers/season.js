@@ -162,21 +162,7 @@ module.exports = {
   async getSeasonByID(ctx) {
     await Model.season
       .findOne({ _id: ctx.params.id })
-      .exec()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "Season not found"; }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  },
-
-  /** Gets a single season including all details */
-  async getSeasonWithDetailsByID(ctx) {
-    await Model.season
-      .findOne({ _id: ctx.params.id })
-      .populate({ path: 'races',		
+      .populate({ path: 'rounds',		
         populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
@@ -185,7 +171,7 @@ module.exports = {
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No season found"; }
+        else { throw "Season not found"; }
       })
       .catch(error => {
         throw new Error(error);

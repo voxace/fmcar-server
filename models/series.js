@@ -25,3 +25,10 @@ const SeriesSchema = new Schema({
 const Series = mongoose.model("Series", SeriesSchema);
 
 module.exports = Series;
+
+
+/* TODO:
+* Put seasons back the way it was
+* Then try to get rounds / sessions working
+* Maybe make sessions separate unless I can populate the points table
+*/

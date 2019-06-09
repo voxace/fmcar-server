@@ -34,12 +34,6 @@ router.get("/season/populate", controller.getAllSeasonsWithDetails);
 router.get("/season/id/:id", controller.getSeasonByID);
 
 /**
- * Get a single season including all details
- * @param {string} id - The ID of the season.
- */
-router.get("/season/id/:id/populate", controller.getSeasonWithDetailsByID);
-
-/**
  * Get all seasons by series
  * @param {string} name - The ID of the series.
  */
