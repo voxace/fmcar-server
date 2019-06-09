@@ -12,13 +12,14 @@ const SeriesSchema = new Schema({
     car: String,
     limit: Number,
   }],
-  raceTypes: [{
+  roundTypes: [{
     _id: false,
     name: String,
     description: String,
   }],
   banner: String,
-  logo: String
+  logo: String,
+  dropRound: { type: Boolean, default: false },
 });
 
 const Series = mongoose.model("Series", SeriesSchema);

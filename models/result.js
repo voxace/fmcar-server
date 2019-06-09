@@ -8,7 +8,6 @@ const ResultSchema = new Schema(
     race: { type: Schema.Types.ObjectId, required: true, ref: 'Race' },
     series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
     season: { type: Schema.Types.ObjectId, required: true, ref: 'Season' },
-    car: String,
     raceType: String,
     position: Number,
     raceTime: Number,

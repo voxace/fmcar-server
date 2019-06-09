@@ -52,12 +52,8 @@ router.get("/series/name/:name/year/:year", controller.getSeriesByNameAndYear);
 
 /**
  * Update all series details by ID
- * @param {string} id - The ID of the series.
- * @param {string} name [optional] - The name of the series.
- * @param {string} game [optional] - The id of the game.
- * @param {number} year [optional] - The year of the series.
- * @param {string} banner [optional] - The banner (image) of the series.
- * @param {string} logo [optional] - The logo (image) of the series.
+ * @param {string} id - The ID of the series
+ * @param {object} model - The model of the series
  */
 router.patch("/series/:id", controller.patchSeriesByID);
 

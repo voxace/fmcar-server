@@ -5,7 +5,7 @@ const SeasonSchema = new Schema({
   season: { type: Number, default: 1 },
   series: { type: Schema.Types.ObjectId, ref: 'Series' },
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
-  races: [{ type: Schema.Types.ObjectId, ref: 'Race' }],
+  rounds: [{ type: Schema.Types.ObjectId, ref: 'Round' }],
 })
 
 const Season = mongoose.model("Season", SeasonSchema);
