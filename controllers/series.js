@@ -173,7 +173,7 @@ module.exports = {
 
     let model = ctx.request.body.model;
 
-    if(model.banner != null && ctx.request.body.upload != 'delete') {
+    if(model.banner != null && model.banner != 'delete') {
       const oldPath = './uploads' + model.banner;
       if (fs.existsSync(oldPath)) {
         const extension = path.extname(oldPath);
@@ -183,10 +183,26 @@ module.exports = {
       }
     }
 
-    if(model.banner != null && ctx.request.body.upload == 'delete') {
+    if(model.banner != null && model.banner == 'delete') {
       const image = './public/' + model.banner;
       await fs.unlink(image, function(err) { if(err) { console.log('Error: ' + err) } });
       model.banner = null;
+    }
+
+    if(model.logo != null && model.logo != 'delete') {
+      const oldPath = './uploads' + model.logo;
+      if (fs.existsSync(oldPath)) {
+        const extension = path.extname(oldPath);
+        const newPath = './public/' + ctx.params.id + extension;
+        await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+        model.logo = ctx.params.id + extension;
+      }
+    }
+
+    if(model.banner != null && model.logo == 'delete') {
+      const image = './public/' + model.banner;
+      await fs.unlink(image, function(err) { if(err) { console.log('Error: ' + err) } });
+      model.logo = null;
     }
 
     await Model.series

@@ -21,6 +21,7 @@ const SeriesSchema = new Schema({
   logo: String,
   dropRound: { type: Boolean, default: false },
   description: String,
+  regs: String,
 });
 
 const Series = mongoose.model("Series", SeriesSchema);
