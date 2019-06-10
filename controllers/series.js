@@ -172,15 +172,15 @@ module.exports = {
   async patchSeriesByID(ctx) {
 
     let model = ctx.request.body.model;
-    console.log(model);
-    console.log(ctx.request.body.upload);
 
     if(model.banner != null && ctx.request.body.upload != 'delete') {
       const oldPath = './uploads' + model.banner;
-      const extension = path.extname(oldPath);
-      const newPath = './public/' + ctx.params.id + extension;
-      await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
-      model.banner = ctx.params.id + extension;
+      if (fs.existsSync(oldPath)) {
+        const extension = path.extname(oldPath);
+        const newPath = './public/' + ctx.params.id + extension;
+        await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+        model.banner = ctx.params.id + extension;
+      }
     }
 
     if(model.banner != null && ctx.request.body.upload == 'delete') {
