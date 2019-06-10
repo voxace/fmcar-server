@@ -146,7 +146,7 @@ module.exports = {
       .exec()
       .then(result => {
         if(result.length > 0) { ctx.body = result; }
-        else if(result.length == 0) { ctx.body = "No teams found in series"; }
+        else if(result.length == 0) { ctx.body = []; }
         else { throw "Error getting teams by user"; }
       })
       .catch(error => {
@@ -182,7 +182,11 @@ module.exports = {
       .exec();
 
     function compareNumbers(a, b) { return a - b; }
-    ctx.body = data[0].numbers.sort(compareNumbers);
+    if (data.length > 0) {
+      ctx.body = data[0].numbers.sort(compareNumbers);
+    } else {
+      ctx.body = [];
+    }    
   },
 
     /** Get all driver numbers for season */

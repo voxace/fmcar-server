@@ -14,7 +14,7 @@ const RoundSchema = new Schema(
       time: String,
       weather: String,
       laps: Number,
-      raceType: String,
+      sessionType: String,
       pointsTable: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
       results: [{ type: Schema.Types.ObjectId, ref: 'Result' }]
     }]    
