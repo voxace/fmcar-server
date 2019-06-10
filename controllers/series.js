@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Model = require("../models");
 const async = require("async");
+const fs = require("fs");
+const path = require("path");
 
 module.exports = {
 
@@ -30,6 +32,24 @@ module.exports = {
       .catch(error => {
         throw new Error(error);
       });
+
+    if(newSeriesResult && ctx.request.body.upload) {
+
+      const oldPath = './uploads/' + ctx.request.body.upload;
+      const extension = path.extname(oldPath);
+      const newPath = './public/' + newSeriesResult._id + extension;
+      await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+      newSeriesResult.banner = newSeriesResult._id + extension;
+
+      await newSeriesResult
+        .save()
+        .then(result => {
+          newSeriesResult = result;
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
+    }
       
     await Model.season
       .updateOne({ _id: newSeasonResult._id }, {
@@ -150,8 +170,27 @@ module.exports = {
 
   /** Update all series details by ID */
   async patchSeriesByID(ctx) {
+
+    let model = ctx.request.body.model;
+    console.log(model);
+    console.log(ctx.request.body.upload);
+
+    if(model.banner != null && ctx.request.body.upload != 'delete') {
+      const oldPath = './uploads' + model.banner;
+      const extension = path.extname(oldPath);
+      const newPath = './public/' + ctx.params.id + extension;
+      await fs.rename(oldPath, newPath, function(err) { if(err) { console.log('Error: ' + err) } });
+      model.banner = ctx.params.id + extension;
+    }
+
+    if(model.banner != null && ctx.request.body.upload == 'delete') {
+      const image = './public/' + model.banner;
+      await fs.unlink(image, function(err) { if(err) { console.log('Error: ' + err) } });
+      model.banner = null;
+    }
+
     await Model.series
-      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
+      .findByIdAndUpdate(ctx.params.id, { $set: model }, { new: true })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "Error updating series"; }

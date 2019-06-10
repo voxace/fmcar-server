@@ -106,7 +106,7 @@ module.exports = {
     }
 
     await Model.game
-      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
+      .findByIdAndUpdate(ctx.params.id, { $set: model }, { new: true })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "Error updating game"; }
