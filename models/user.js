@@ -8,6 +8,7 @@ const UserSchema = new Schema({
   gamertag: { type: String, unique: true, required: true },
   avatar: String,
   registered: { type: Date, default: Date.now },
+  lastLogin: { type: Date, default: Date.now },
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   salt: String,
   admin: { type: Boolean, default: false },

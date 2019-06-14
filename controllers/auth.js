@@ -95,6 +95,10 @@ module.exports = {
       },
       token: generateJWT(userRecord),
     }
+
+    userRecord.lastLogin = Date.now();
+    await userRecord.save();
+
   },
 
   // Verify email address
