@@ -24,11 +24,3 @@ const RoundSchema = new Schema(
 const Round = mongoose.model("Round", RoundSchema);
 
 module.exports = Round;
-
-
-/* TODO:
- * Add round modal should have all round info in first tab
- * Then have a tab for each race with remaining info
- * Have a + button tab, and a delete button inside the race tab
- * NOTE: populate can be limited to certain fields
-*/

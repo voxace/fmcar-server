@@ -5,10 +5,9 @@ const ResultSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     team: { type: Schema.Types.ObjectId, required: true, ref: 'Team' },
-    race: { type: Schema.Types.ObjectId, required: true, ref: 'Race' },
+    session: { type: Schema.Types.ObjectId, required: true },
     series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
     season: { type: Schema.Types.ObjectId, required: true, ref: 'Season' },
-    raceType: String,
     position: Number,
     raceTime: Number,
     fastestLap: {
