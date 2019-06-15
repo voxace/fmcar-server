@@ -165,6 +165,9 @@ module.exports = {
       .populate({ path: 'rounds',		
         populate: { path: 'track', model: 'Track'}
       })
+      .populate({ path: 'rounds',		
+        populate: { path: 'sessions.pointsTable', model: 'Points'}
+      })
       .populate({ path: 'teams',			
         populate: { path: 'driver_a driver_b', model: 'User' }
       })
