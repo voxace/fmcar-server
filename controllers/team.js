@@ -106,13 +106,31 @@ module.exports = {
   /** Get all teams that user belongs to */
   async getTeamsByUser(ctx) {
     await Model.team
-      .find({ $or: [ { driver_a: ctx.params.user, driver_b: ctx.params.user } ] })
+      .find({ $or: [ { driver_a: ctx.params.user }, { driver_b: ctx.params.user } ] })
       .populate('driver_a')
       .populate('driver_b')
       .exec()
       .then(result => {
         if(result.length > 0) { ctx.body = result; }
-        else if(result.length == 0) { ctx.body = "User not found in any teams"; }
+        else if(result.length == 0) { ctx.body = []; }
+        else { throw "Error getting teams by user"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  },
+
+  /** Get all teams that user belongs to */
+  async getTeamByUserAndSeason(ctx) {
+    await Model.team
+      .findOne({ 
+        season: ctx.params.season,
+        $or: [ { driver_a: ctx.params.user }, { driver_b: ctx.params.user } ] 
+      })
+      .exec()
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else if(!result) { ctx.body = "Team not found"; }
         else { throw "Error getting teams by user"; }
       })
       .catch(error => {
@@ -129,7 +147,7 @@ module.exports = {
       .exec()
       .then(result => {
         if(result.length > 0) { ctx.body = result; }
-        else if(result.length == 0) { ctx.body = "No teams found in season"; }
+        else if(result.length == 0) { ctx.body = []; }
         else { throw "Error getting teams by user"; }
       })
       .catch(error => {
@@ -189,30 +207,88 @@ module.exports = {
     }    
   },
 
-    /** Get all driver numbers for season */
-    async getCarsUsedBySeason(ctx) {    
-      let data = await Model.team
-        .aggregate([
+  /** Get all drivers for season */
+  async getDriversBySeason(ctx) {    
+    let data = await Model.team
+      .aggregate([
+        {
+          $match: 
           {
-            $match: 
-            {
-              season: mongoose.Types.ObjectId(ctx.params.season)
-            }
-          },
-          {
-            $group: {
-              _id: "$car",
-              count:{ $sum:1 }
-            }
+            season: mongoose.Types.ObjectId(ctx.params.season)
           }
-        ])
-        .exec();
-      if (data.length == 1 && data[0]._id == null) {
-        ctx.body = [];
-      } else {
-        ctx.body = data;
-      }
-    },
+        },
+        { 
+          $lookup: {
+            from: 'users',
+            let: { "userId": "$driver_a" },
+            pipeline: [
+              { "$match": { "$expr": { "$eq": [ "$_id", "$$userId" ] }}},
+              { "$project": { "name": 1 }}
+            ],
+            as: 'driver_a'
+          } 
+        },
+        {
+          $unwind: "$driver_a"
+        },
+        { 
+          $lookup: {
+            from: 'users',
+            let: { "userId": "$driver_b" },
+            pipeline: [
+              { "$match": { "$expr": { "$eq": [ "$_id", "$$userId" ] }}},
+              { "$project": { "name": 1 }}
+            ],
+            as: 'driver_b'
+          } 
+        },
+        {
+          $unwind: "$driver_b"
+        },
+        {
+          $group: {
+            _id: "$season",
+            driver_a: { $addToSet: "$driver_a" },
+            driver_b: { $addToSet: "$driver_b" }
+          }
+        },
+        { 
+          $project: {
+            _id: false,
+            drivers: { 
+              $concatArrays: [ "$driver_a", "$driver_b" ] 
+            }
+          } 
+        }
+      ])
+      .exec();
+    ctx.body = data[0].drivers;
+  },
+
+  /** Get all cars used for season */
+  async getCarsUsedBySeason(ctx) {    
+    let data = await Model.team
+      .aggregate([
+        {
+          $match: 
+          {
+            season: mongoose.Types.ObjectId(ctx.params.season)
+          }
+        },
+        {
+          $group: {
+            _id: "$car",
+            count:{ $sum:1 }
+          }
+        }
+      ])
+      .exec();
+    if (data.length == 1 && data[0]._id == null) {
+      ctx.body = [];
+    } else {
+      ctx.body = data;
+    }
+  },
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 

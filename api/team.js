@@ -46,6 +46,13 @@ router.get("/team/user/:user", controller.getTeamsByUser);
 router.get("/team/season/:season", controller.getTeamsBySeason);
 
 /**
+ * Gets all teams that a user belongs to
+ * @param {string} user - The ID of the user
+ * @param {string} season - The ID of the season
+ */
+router.get("/team/user/:user/season/:season", controller.getTeamByUserAndSeason);
+
+/**
  * Gets all teams that belong to a particular series
  * @param {string} series - The ID of the series.
  */
@@ -56,6 +63,12 @@ router.get("/team/series/:series", controller.getTeamsBySeries);
  * @param {string} season - The ID of the season.
  */
 router.get("/team/numbers/:season", controller.getDriverNumbersBySeason);
+
+/**
+ * Get all driver numbers for season
+ * @param {string} season - The ID of the season.
+ */
+router.get("/team/drivers/:season", controller.getDriversBySeason);
 
 /**
  * Gets a count of all cars used in a particular season
