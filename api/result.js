@@ -10,13 +10,13 @@ router.post("/result", controller.addResult);
 /* ~~~~~~~~~~~~~~~~~~~~ GETS ~~~~~~~~~~~~~~~~~~~~ */
 
 // Get all results
-router.get("/result", controller.getAllResults);
+router.get("/results", controller.getAllResults);
 
 // Get single result by ID
 router.get("/result/id/:id", controller.getResultByID);
 
-// Get single result by Race
-router.get("/result/race/:race", controller.getResultByRace);
+// Get all results by session
+router.get("/results/session/:session", controller.getResultsBySession);
 
 // Get single result by User
 router.get("/result/user/:user", controller.getResultByUser);

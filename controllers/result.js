@@ -8,17 +8,8 @@ module.exports = {
 
   // Add new result
   async addResult(ctx) {
-    let newResult = new Model.result({ 
-      user: ctx.request.body.user, 
-      race: ctx.request.body.race,
-      pointsType: ctx.request.body.pointsType, 
-      raceType: ctx.request.body.raceType,
-      position: ctx.request.body.position, 
-      lapTime_h: ctx.request.body.lapTime_h,
-      lapTime_m: ctx.request.body.lapTime_m,
-      lapTime_s: ctx.request.body.lapTime_s,
-      lapTime_ms: ctx.request.body.lapTime_ms
-    });
+    let model = ctx.request.body.model;
+    let newResult = new Model.result(model);
     await newResult
       .save()
       .then(result => {
@@ -62,12 +53,14 @@ module.exports = {
   },
 
   // Get single result by Race
-  async getResultByRace(ctx) {
+  async getResultsBySession(ctx) {
     await Model.result
-      .findOne({ race: ctx.params.race })
+      .find({ session: ctx.params.session })
+      .populate('user')
+      .populate('team')
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No results found for that race"; }
+        else { throw "No results found for that session"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -92,27 +85,10 @@ module.exports = {
   // Update all result details by ID
   async patchResultByID(ctx) {
     await Model.result
-      .findOne({ _id: ctx.params.id })
-      .then(async result => {
-        if(result) {          
-          if(ctx.request.body.user) { result.user = ctx.request.body.user }
-          if(ctx.request.body.race) { result.race = ctx.request.body.race }
-          if(ctx.request.body.pointsType) { result.pointsType = ctx.request.body.pointsType }
-          if(ctx.request.body.raceType) { result.raceType = ctx.request.body.raceType }
-          if(ctx.request.body.position) { result.position = ctx.request.body.position }
-          if(ctx.request.body.lapTime_h) { result.lapTime_h = ctx.request.body.lapTime_h }
-          if(ctx.request.body.lapTime_m) { result.lapTime_m = ctx.request.body.lapTime_m }
-          if(ctx.request.body.lapTime_s) { result.lapTime_s = ctx.request.body.lapTime_s }
-          if(ctx.request.body.lapTime_ms) { result.lapTime_ms = ctx.request.body.lapTime_ms }
-          await result
-          .save()
-          .then(newResult => {
-            if(newResult) { ctx.body = newResult; }
-            else { throw "Error updating result"; }
-          })
-        } else { 
-          throw "Result not found";
-        }
+      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "Error updating result"; }
       })
       .catch(error => {
         throw new Error(error);

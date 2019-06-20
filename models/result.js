@@ -9,12 +9,6 @@ const ResultSchema = new Schema(
     series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
     season: { type: Schema.Types.ObjectId, required: true, ref: 'Season' },
     position: Number,
-    raceTime: Number,
-    fastestLap: {
-      minutes: Number,
-      seconds: Number,
-      millis: Number
-    }
   }
 );
 
