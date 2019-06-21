@@ -52,7 +52,7 @@ module.exports = {
       });
   },
 
-  // Get single result by Race
+  // Get all results by session
   async getResultsBySession(ctx) {
     await Model.result
       .find({ session: ctx.params.session })

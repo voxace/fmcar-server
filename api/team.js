@@ -65,7 +65,7 @@ router.get("/team/series/:series", controller.getTeamsBySeries);
 router.get("/team/numbers/:season", controller.getDriverNumbersBySeason);
 
 /**
- * Get all driver numbers for season
+ * Get all driver for season
  * @param {string} season - The ID of the season.
  */
 router.get("/team/drivers/:season", controller.getDriversBySeason);
