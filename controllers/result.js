@@ -8,17 +8,35 @@ module.exports = {
 
   // Add new result
   async addResult(ctx) {
+
     let model = ctx.request.body.model;
     let newResult = new Model.result(model);
-    await newResult
+    console.log(model);
+
+    let resultResult = await newResult
       .save()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "Error saving result"; }
-      })
       .catch(error => {
         throw new Error(error);
       });
+
+    let sessionResult = await Model.session
+      .updateOne(
+        { 
+          _id: model.session, 
+        }, 
+        {
+          $addToSet: { results: resultResult._id }
+        }
+      )
+      .catch(error => {
+        throw new Error(error);
+      });
+
+      if(resultResult && sessionResult.nModified > 0) { 
+        ctx.body = resultResult;
+      } else { 
+        throw "Error updating session";
+      }
   },
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
