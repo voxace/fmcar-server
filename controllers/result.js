@@ -67,6 +67,29 @@ module.exports = {
       });
   },
 
+  // Get all results by season
+  async getResultsBySeason(ctx) {
+    // CALCULATE RESULTS FOR WHOLE SEASON
+
+    // get all results for season
+    let seasonResults = await Model.result
+      .find({ season: ctx.params.season })
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "No results found for that session"; }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+
+    // add points from sessions to the round total
+    // group by each user
+    // sort by points
+    // drop lowest round if needed
+    // add points together for a total column
+    // sort by total column
+  },
+
   // Get single result by User
   async getResultByUser(ctx) {
     await Model.result

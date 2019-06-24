@@ -1,7 +1,7 @@
 const auth = require("./controllers/auth");
 const game = require("./controllers/game");
 const points = require("./controllers/points");
-const race = require("./controllers/race");
+const session = require("./controllers/session");
 const result = require("./controllers/result");
 const round = require("./controllers/round");
 const season = require("./controllers/season");
@@ -14,7 +14,7 @@ module.exports = {
   auth,
   game,
   points,
-  race,
+  session,
   result,
   round,
   season,

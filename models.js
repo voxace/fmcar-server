@@ -1,6 +1,6 @@
 const game = require("./models/game");
 const points = require("./models/points");
-const race = require("./models/race");
+const session = require("./models/session");
 const result = require("./models/result");
 const round = require("./models/round");
 const season = require("./models/season");
@@ -12,7 +12,7 @@ const user = require("./models/user");
 module.exports = {
   game,
   points,
-  race,
+  session,
   result,
   round,
   season,

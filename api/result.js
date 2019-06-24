@@ -18,6 +18,9 @@ router.get("/result/id/:id", controller.getResultByID);
 // Get all results by session
 router.get("/results/session/:session", controller.getResultsBySession);
 
+// Get all results by season
+router.get("/results/season/:season", controller.getResultsBySeason);
+
 // Get single result by User
 router.get("/result/user/:user", controller.getResultByUser);
 

@@ -6,35 +6,35 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ CREATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  /** Creates a new race and adds it to a season */
-  async addRace(ctx) {
+  /** Creates a new session and adds it to a season */
+  async addSession(ctx) {
 
     let model = ctx.request.body.model;
-    let newRace = new Model.race(model);
+    let newSession = new Model.session(model);
     console.log(model);
 
-    let raceResult = await newRace
+    let sessionResult = await newSession
       .save()
       .catch(error => {
         throw new Error(error);
       });
 
-    let seasonResult = await Model.season
+    let roundResult = await Model.round
       .updateOne(
         { 
-          _id: model.season, 
+          _id: model.round, 
         }, 
         {
-          $addToSet: { races: raceResult._id }
+          $addToSet: { sessions: sessionResult._id }
         }
       )
       .catch(error => {
         throw new Error(error);
       });
 
-      if(raceResult && seasonResult.nModified > 0) { 
-        console.log(raceResult);
-        ctx.body = raceResult;
+      if(sessionResult && roundResult.nModified > 0) { 
+        console.log(sessionResult);
+        ctx.body = sessionResult;
       } else { 
         throw "Error updating season";
       }
@@ -42,40 +42,40 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ READ ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Get all races
-  async getAllRaces(ctx) {
-    await Model.race
+  // Get all sessions
+  async getAllSessions(ctx) {
+    await Model.session
       .find({})
       .populate('series')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No races found"; }
+        else { throw "No sessions found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  // Get single race by ID
-  async getRaceByID(ctx) {
-    await Model.race
+  // Get single session by ID
+  async getSessionByID(ctx) {
+    await Model.session
       .findOne({ _id: ctx.params.id })
       .populate('series')
       .populate('results')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "Race not found"; }
+        else { throw "Session not found"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  // Get all races grouped by Series
-  async getRacesGroupedBySeries(ctx) {
-    let data = await Model.race
+  // Get all sessions grouped by Series
+  async getSessionsGroupedBySeries(ctx) {
+    let data = await Model.session
       .aggregate([
         {
           $lookup: {
@@ -88,7 +88,7 @@ module.exports = {
         {
           $group: {
             _id: "$series",
-            races: {
+            sessions: {
               $push: {
                 _id: "$_id",
                 number: "$number",
@@ -105,61 +105,47 @@ module.exports = {
     ctx.body = data;    
   },
 
-  // Get all races filtered by series
-  async getRacesBySeries(ctx) {
-    await Model.race
+  // Get all sessions filtered by series
+  async getSessionsBySeries(ctx) {
+    await Model.session
       .find({ series: ctx.params.series })
       .populate('series')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No races found for that series"; }
+        else { throw "No sessions found for that series"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  // Get all races filtered by season
-  async getRacesBySeason(ctx) {
-    await Model.race
+  // Get all sessions filtered by season
+  async getSessionsBySeason(ctx) {
+    await Model.session
       .find({ season: ctx.params.season })
       .populate('series')
       .populate('season')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No races found for that season"; }
+        else { throw "No sessions found for that season"; }
       })
       .catch(error => {
         throw new Error(error);
       });
   },
 
-  // Get all races by Type
-  async getRacesByType(ctx) {
-    await Model.race
-      .find({ type: ctx.params.type })
+  // Get all sessions filtered by season
+  async getSessionsByRound(ctx) {
+    await Model.session
+      .find({ round: ctx.params.round })
       .populate('series')
+      .populate('season')
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
-        else { throw "No race found for that type"; }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
-  },
-
-  // Get all races by Track
-  async getRacesByTrack(ctx) {
-    await Model.race
-      .find({ track: ctx.params.track })
-      .populate('series')
-      .exec()
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "No race found for that track"; }
+        else { throw "No sessions found for that round"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -168,9 +154,9 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ UPDATE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Update all race details by ID
-  async patchRaceByID(ctx) {
-    await Model.race
+  // Update all session details by ID
+  async patchSessionByID(ctx) {
+    await Model.session
       .findOne({ _id: ctx.params.id })
       .then(async result => {
         if(result) {        
@@ -187,10 +173,10 @@ module.exports = {
           .save()
           .then(newResult => {
             if(newResult) { ctx.body = newResult; }
-            else { throw "Error updating race"; }
+            else { throw "Error updating session"; }
           })
         } else { 
-          throw "Race not found";
+          throw "Session not found";
         }
       })
       .catch(error => {
@@ -200,38 +186,38 @@ module.exports = {
 
   /* ~~~~~~~~~~~~~~~~~~~~ DELETE ~~~~~~~~~~~~~~~~~~~~ */
 
-  // Delete race by ID
-  async deleteRaceByID(ctx) {
+  // Delete session by ID
+  async deleteSessionByID(ctx) {
 
-    // Get race details
-    let raceResult = await Model.race
+    // Get session details
+    let sessionResult = await Model.session
       .findOne({ _id: ctx.params.id })
       .catch(error => {
         throw new Error(error);
       });
 
-    // Remove the race from the season
+    // Remove the session from the season
     await Model.season
-      .updateOne({ _id: raceResult.season }, {
-        $pull: { races: ctx.params.race }
+      .updateOne({ _id: sessionResult.season }, {
+        $pull: { sessions: ctx.params.session }
       })
       .catch(error => {
         throw new Error(error);
       });
 
-    // Remove all of the results for the race
+    // Remove all of the results for the session
     await Model.result
-      .deleteMany({ race: ctx.params.race })
+      .deleteMany({ session: ctx.params.session })
       .catch(error => {
         throw new Error(error);
       });
 
-    // Remove the race itself
-    await Model.race
+    // Remove the session itself
+    await Model.session
       .deleteOne({ _id: ctx.params.id })
       .then(result => {
         if(result.deletedCount > 0) { ctx.body = "Delete Successful"; }
-        else { throw "Error deleting race"; }
+        else { throw "Error deleting session"; }
       })
       .catch(error => {
         throw new Error(error);

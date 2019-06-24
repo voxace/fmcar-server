@@ -1,23 +1,22 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const RaceSchema = new Schema(
+const SessionSchema = new Schema(
   {
     series: { type: Schema.Types.ObjectId, required: true, ref: 'Series' },
     season: { type: Schema.Types.ObjectId, required: true, ref: 'Season' },
-    pointsTable: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
-    track: { type: Schema.Types.ObjectId, required: true, ref: 'Track' },
-    round: Number,
-    number: Number,
+    round : { type: Schema.Types.ObjectId, required: true, ref: 'Round' },
     date: String,
-    raceType: String,
-    configuration: String,
+    time: String,
     weather: String,
     laps: Number,
+    sessionNumber: Number,
+    sessionType: String,
+    pointsTable: { type: Schema.Types.ObjectId, required: true, ref: 'Points' },
     results: [{ type: Schema.Types.ObjectId, ref: 'Result' }]
   }
 );
 
-const Race = mongoose.model("Race", RaceSchema);
+const Session = mongoose.model("Session", SessionSchema);
 
-module.exports = Race;
+module.exports = Session;
