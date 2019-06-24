@@ -33,7 +33,6 @@ module.exports = {
       });
 
       if(sessionResult && roundResult.nModified > 0) { 
-        console.log(sessionResult);
         ctx.body = sessionResult;
       } else { 
         throw "Error updating season";
@@ -109,7 +108,7 @@ module.exports = {
   async getSessionsBySeries(ctx) {
     await Model.session
       .find({ series: ctx.params.series })
-      .populate('series')
+      .populate({ path: 'pointsTable', model: 'Points' })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
@@ -124,8 +123,7 @@ module.exports = {
   async getSessionsBySeason(ctx) {
     await Model.session
       .find({ season: ctx.params.season })
-      .populate('series')
-      .populate('season')
+      .populate({ path: 'pointsTable', model: 'Points' })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
@@ -140,8 +138,7 @@ module.exports = {
   async getSessionsByRound(ctx) {
     await Model.session
       .find({ round: ctx.params.round })
-      .populate('series')
-      .populate('season')
+      .populate({ path: 'pointsTable', model: 'Points' })
       .exec()
       .then(result => {
         if(result) { ctx.body = result; }
@@ -157,27 +154,10 @@ module.exports = {
   // Update all session details by ID
   async patchSessionByID(ctx) {
     await Model.session
-      .findOne({ _id: ctx.params.id })
-      .then(async result => {
-        if(result) {        
-          if(ctx.request.body.series) { result.series = ctx.request.body.series }
-          if(ctx.request.body.season) { result.series = ctx.request.body.season }
-          if(ctx.request.body.pointsTable) { result.pointType = ctx.request.body.pointsTable }
-          if(ctx.request.body.track) { result.track = ctx.request.body.track }
-          if(ctx.request.body.round) { result.round = ctx.request.body.round }
-          if(ctx.request.body.number) { result.number = ctx.request.body.number }
-          if(ctx.request.body.type) { result.type = ctx.request.body.type }
-          if(ctx.request.body.configuration) { result.configuration = ctx.request.body.configuration }
-          if(ctx.request.body.date) { result.date = ctx.request.body.date }
-          await result
-          .save()
-          .then(newResult => {
-            if(newResult) { ctx.body = newResult; }
-            else { throw "Error updating session"; }
-          })
-        } else { 
-          throw "Session not found";
-        }
+      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "Error updating session"; }
       })
       .catch(error => {
         throw new Error(error);
@@ -196,10 +176,10 @@ module.exports = {
         throw new Error(error);
       });
 
-    // Remove the session from the season
-    await Model.season
-      .updateOne({ _id: sessionResult.season }, {
-        $pull: { sessions: ctx.params.session }
+    // Remove the session from the round
+    await Model.round
+      .updateOne({ _id: sessionResult.round }, {
+        $pull: { sessions: ctx.params.id }
       })
       .catch(error => {
         throw new Error(error);
@@ -207,7 +187,7 @@ module.exports = {
 
     // Remove all of the results for the session
     await Model.result
-      .deleteMany({ session: ctx.params.session })
+      .deleteMany({ session: ctx.params.id })
       .catch(error => {
         throw new Error(error);
       });
@@ -220,7 +200,7 @@ module.exports = {
         else { throw "Error deleting session"; }
       })
       .catch(error => {
-        throw new Error(error);
+        throw new Error(error);020
       });
   
   },

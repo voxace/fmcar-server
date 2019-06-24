@@ -142,8 +142,13 @@ module.exports = {
    async getAllSeasonsWithDetails(ctx) {
     await Model.season
       .find({})
-      .populate({ path: 'races',		
+      .populate({ path: 'rounds',		
         populate: { path: 'track', model: 'Track'}
+      })
+      .populate({ path: 'rounds',		
+        populate: { path: 'sessions', model: 'Session', 
+          populate: { path: 'pointsTable', model: 'Points' } 
+        }
       })
       .populate({ path: 'teams',			
         populate: { path: 'driver_a driver_b', model: 'User' }
@@ -164,9 +169,6 @@ module.exports = {
       .findOne({ _id: ctx.params.id })
       .populate({ path: 'rounds',		
         populate: { path: 'track', model: 'Track'}
-      })
-      .populate({ path: 'rounds',		
-        populate: { path: 'sessions.pointsTable', model: 'Points'}
       })
       .populate({ path: 'teams',			
         populate: { path: 'driver_a driver_b', model: 'User' }
@@ -199,7 +201,7 @@ module.exports = {
   async getAllSeasonsWithDetailsBySeries(ctx) {
     await Model.season
       .find({ series: ctx.params.series })
-      .populate({ path: 'races',		
+      .populate({ path: 'rounds',		
         populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
@@ -222,7 +224,7 @@ module.exports = {
         series: ctx.params.series,
         season: ctx.params.season,
       })
-      .populate({ path: 'races',		
+      .populate({ path: 'rounds',		
         populate: { path: 'track', model: 'Track'}
       })
       .populate({ path: 'teams',			
@@ -243,23 +245,10 @@ module.exports = {
   /** Update all season details by ID */
   async patchSeasonByID(ctx) {
     await Model.season
-      .findOne({ _id: ctx.params.id })
-      .then(async result => {
-        if(result) {          
-          if(ctx.request.body.name) { result.name = ctx.request.body.name }
-          if(ctx.request.body.banner) { result.banner = ctx.request.body.banner }
-          if(ctx.request.body.logo) { result.logo = ctx.request.body.logo }
-          if(ctx.request.body.year) { result.year = ctx.request.body.year }
-          if(ctx.request.body.game) { result.game = ctx.request.body.game }
-          await result
-          .save()
-          .then(newResult => {
-            if(newResult) { ctx.body = newResult; }
-            else { throw "Error updating season"; }
-          })
-        } else { 
-          throw "Season not found";
-        }
+      .findByIdAndUpdate(ctx.params.id, { $set: ctx.request.body.model }, { new: true })
+      .then(result => {
+        if(result) { ctx.body = result; }
+        else { throw "Error updating session"; }
       })
       .catch(error => {
         throw new Error(error);

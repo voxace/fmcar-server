@@ -72,8 +72,8 @@ module.exports = {
     // CALCULATE RESULTS FOR WHOLE SEASON
 
     // get all results for season
-    let seasonResults = await Model.result
-      .find({ season: ctx.params.season })
+    let sessionResults = await Model.result
+      .find({ session: ctx.params.session })
       .then(result => {
         if(result) { ctx.body = result; }
         else { throw "No results found for that session"; }
