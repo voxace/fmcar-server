@@ -74,6 +74,7 @@ module.exports = {
   async getResultsBySession(ctx) {
     await Model.result
       .find({ session: ctx.params.session })
+      .sort('position')
       .populate('user')
       .populate('team')
       .then(result => {
@@ -90,15 +91,28 @@ module.exports = {
     // CALCULATE RESULTS FOR WHOLE SEASON
 
     // get all results for season
-    let sessionResults = await Model.result
-      .find({ session: ctx.params.session })
-      .then(result => {
-        if(result) { ctx.body = result; }
-        else { throw "No results found for that session"; }
-      })
-      .catch(error => {
-        throw new Error(error);
-      });
+    let data = await Model.result
+      .aggregate([
+        { $match : { season : new mongoose.Types.ObjectId(ctx.params.season) } },
+        /*
+        {
+          $lookup: {
+            from: "series",
+            localField: "series",
+            foreignField: "_id",
+            as: "series"
+          }
+        },
+        */
+        {
+          $group: {
+            _id: "$round",
+            data: { $push : "$$ROOT" }
+          }
+        }
+      ])
+      .exec();
+    ctx.body = data;    
 
     // add points from sessions to the round total
     // group by each user

@@ -138,6 +138,7 @@ module.exports = {
   async getSessionsByRound(ctx) {
     await Model.session
       .find({ round: ctx.params.round })
+      .sort('sessionNumber')
       .populate({ path: 'pointsTable', model: 'Points' })
       .exec()
       .then(result => {

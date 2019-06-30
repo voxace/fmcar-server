@@ -11,6 +11,7 @@ const ResultSchema = new Schema(
     team: { type: Schema.Types.ObjectId, required: true, ref: 'Team' },
     session: { type: Schema.Types.ObjectId, required: true },    
     position: Number,
+    penalty: String,  // toggle on add results
   }
 );
 
