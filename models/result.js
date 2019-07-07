@@ -8,8 +8,7 @@ const ResultSchema = new Schema(
     round : { type: Schema.Types.ObjectId, required: true, ref: 'Round' },
     session : { type: Schema.Types.ObjectId, required: true, ref: 'Session' },
     user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    team: { type: Schema.Types.ObjectId, required: true, ref: 'Team' },
-    session: { type: Schema.Types.ObjectId, required: true },    
+    team: { type: Schema.Types.ObjectId, required: true, ref: 'Team' },   
     position: Number,
     penalty: String,  // toggle on add results
   }

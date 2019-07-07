@@ -86,40 +86,107 @@ module.exports = {
       });
   },
 
+    // Get all results by season
+    async getResultsByRound(ctx) {
+      let results = await Model.result
+        .aggregate([
+          {
+            $match: 
+            {
+              round: mongoose.Types.ObjectId(ctx.params.round)
+            }
+          },
+          {
+            $lookup:
+              {
+                from: "users",
+                localField: "user",
+                foreignField: "_id",
+                as: "user"
+              }
+          },
+          {
+            $lookup:
+              {
+                from: "teams",
+                localField: "team",
+                foreignField: "_id",
+                as: "team"
+              }
+          },
+          {
+            $lookup:
+              {
+                from: "sessions",
+                localField: "session",
+                foreignField: "_id",
+                as: "session"
+              }
+          },
+          { $unwind: '$session' },
+          {
+            $lookup:
+              {
+                from: "points",
+                localField: "session.pointsTable",
+                foreignField: "_id",
+                as: "pointsTable"
+              }
+          },
+          { $unwind: '$pointsTable' },
+          { 
+            $project : 
+              { 
+                _id: 0, 
+                position: 1,
+                user: { $arrayElemAt: [ "$user.name", 0 ] },
+                team: { $arrayElemAt: [ "$team.name", 0 ] },
+                sessionNumber: "$session.sessionNumber",
+                points: { $arrayElemAt: [ "$pointsTable.values", { $subtract: [ "$position", 1 ] } ] },
+              } 
+          },
+          {
+            $sort: {
+              sessionNumber: 1
+            }
+          },
+          {
+            $group: {
+              _id: "$user",
+              totalAmount: { $sum: "$points" },
+              team: { $first: "$team" },
+              data: { $push: "$$ROOT" }
+            }
+          },
+          {
+            $sort: {
+              totalAmount: -1
+            }
+          }
+        ]);
+      ctx.body = results;
+    },
+
   // Get all results by season
   async getResultsBySeason(ctx) {
-    // CALCULATE RESULTS FOR WHOLE SEASON
 
-    // get all results for season
-    let data = await Model.result
+    let drivers = await Model.result
       .aggregate([
-        { $match : { season : new mongoose.Types.ObjectId(ctx.params.season) } },
-        /*
         {
-          $lookup: {
-            from: "series",
-            localField: "series",
-            foreignField: "_id",
-            as: "series"
+          $match: 
+          {
+            season: mongoose.Types.ObjectId(ctx.params.season)
           }
         },
-        */
         {
           $group: {
-            _id: "$round",
-            data: { $push : "$$ROOT" }
+            _id: "$user",
           }
-        }
-      ])
-      .exec();
-    ctx.body = data;    
+        },
+      ]);
 
-    // add points from sessions to the round total
-    // group by each user
-    // sort by points
-    // drop lowest round if needed
-    // add points together for a total column
-    // sort by total column
+
+    ctx.body = drivers;
   },
 
   // Get single result by User
