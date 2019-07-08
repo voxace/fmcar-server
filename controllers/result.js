@@ -153,9 +153,15 @@ module.exports = {
           {
             $group: {
               _id: "$user",
-              totalAmount: { $sum: "$points" },
               team: { $first: "$team" },
-              data: { $push: "$$ROOT" }
+              totalAmount: { $sum: "$points" },
+              data: { 
+                $push: {
+                  position: "$position",
+                  sessionNumber: "$sessionNumber",
+                  points: "$points"
+                } 
+              }
             }
           },
           {
