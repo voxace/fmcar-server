@@ -10,7 +10,9 @@ const ResultSchema = new Schema(
     user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     team: { type: Schema.Types.ObjectId, required: true, ref: 'Team' },   
     position: Number,
-    penalty: String,  // toggle on add results
+    raceTime: String,
+    fastestLap: String,
+    penalty: String,
   }
 );
 
