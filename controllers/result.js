@@ -175,24 +175,138 @@ module.exports = {
 
   // Get all results by season
   async getResultsBySeason(ctx) {
-
-    let drivers = await Model.result
-      .aggregate([
-        {
-          $match: 
+    let results = await Model.result
+        .aggregate([
           {
-            season: mongoose.Types.ObjectId(ctx.params.season)
+            $match: 
+            {
+              season: mongoose.Types.ObjectId(ctx.params.season)
+            }
+          },
+          {
+            $lookup:
+              {
+                from: "users",
+                localField: "user",
+                foreignField: "_id",
+                as: "user"
+              }
+          },
+          { $unwind: '$user' },
+          {
+            $lookup:
+              {
+                from: "teams",
+                localField: "team",
+                foreignField: "_id",
+                as: "team"
+              }
+          },
+          { $unwind: '$team' },
+          {
+            $lookup:
+              {
+                from: "sessions",
+                localField: "session",
+                foreignField: "_id",
+                as: "session"
+              }
+          },
+          { $unwind: '$session' },
+          {
+            $lookup:
+              {
+                from: "points",
+                localField: "session.pointsTable",
+                foreignField: "_id",
+                as: "pointsTable"
+              }
+          },
+          { $unwind: '$pointsTable' },
+          {
+            $lookup:
+              {
+                from: "rounds",
+                localField: "round",
+                foreignField: "_id",
+                as: "round"
+              }
+          },
+          { $unwind: '$round' },
+          { 
+            $project : 
+              { 
+                _id: 0, 
+                position: 1,
+                user: "$user.name",
+                gamertag: "$user.gamertag",
+                number: {
+                  $cond: {
+                     if: { $eq: [ "$user._id", "$team.driver_a" ] },
+                     then: "$team.driver_a_num",
+                     else: "$team.driver_b_num"
+                  }
+                },
+                team: "$team.name",
+                sessionNumber: "$session.sessionNumber",
+                round: "$round.round",
+                points: { $arrayElemAt: [ "$pointsTable.values", { $subtract: [ "$position", 1 ] } ] },
+              } 
+          },
+          {
+            $sort: {
+              sessionNumber: 1
+            }
+          },
+          {
+            $group: {
+              _id: { 
+                round: "$round",
+                number: "$number",
+                user: "$user",
+                gamertag: "$gamertag",
+                team: "$team"
+              },
+              roundTotal: { $sum: "$points" },
+              sessions: { 
+                $push: {
+                  position: "$position",
+                  sessionNumber: "$sessionNumber",
+                  points: "$points",
+                } 
+              }
+            }
+          },
+          {
+            $sort: {
+              "_id.round": 1
+            }
+          },
+          {
+            $group: {
+              _id: {
+                number: "$_id.number",
+                user: "$_id.user",
+                gamertag: "$_id.gamertag", 
+                team: "$_id.team"
+              },
+              seasonTotal: { $sum: "$roundTotal" },
+              rounds: { 
+                $push: {
+                  round: "$_id.round",
+                  roundTotal: "$roundTotal",
+                  sessions: "$sessions",
+                } 
+              }
+            }
+          },
+          {
+            $sort: {
+              seasonTotal: -1
+            }
           }
-        },
-        {
-          $group: {
-            _id: "$user",
-          }
-        },
-      ]);
-
-
-    ctx.body = drivers;
+        ]);
+      ctx.body = results;
   },
 
   // Get single result by User
