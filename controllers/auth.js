@@ -88,6 +88,7 @@ module.exports = {
 
     ctx.body = {
       user: {
+        _id: userRecord._id,
         name: userRecord.name,
         email: userRecord.email,
         gamertag: userRecord.gamertag,
